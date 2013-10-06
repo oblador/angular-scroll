@@ -1,17 +1,26 @@
 {
   "name": "angular-scroll",
   "version": "0.1.0",
-  "description": "",
+  "description": "Scroll event listener and animated scrollTo",
+  "keywords": ["angular", "smooth-scroll", "scrollTo", "scrolling"],
   "main": "angular-scroll.min.js",
+  "repository": {
+    "type": "git",
+    "url": "git://git@github.com:durated/angular-scroll.git"
+  },
+  "bugs": {
+    "url": "https://github.com/durated/angular-scroll/issues"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Joel Arvidsson",
+  "author": "Durated (http://durated.com)",
+  "contributors": ["Joel Arvidsson", "Joachim Karlsson"],
   "license": "MIT",
   "devDependencies": {
+    "grunt": "~0.4.1",
     "grunt-ngmin": "0.0.3",
     "grunt-contrib-uglify": "~0.2.4",
-    "grunt": "~0.4.1",
     "grunt-contrib-jshint": "~0.6.4",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-concat": "~0.3.0"
