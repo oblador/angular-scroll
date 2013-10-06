@@ -1,6 +1,5 @@
 module.exports = function (grunt) {
 
-
   // Project configuration.
   grunt.initConfig({
     jshint: {
@@ -15,8 +14,7 @@ module.exports = function (grunt) {
       },
     },
     clean: {
-      dist:   ['angular-scroll.js', 'angular-scroll.min.js'],
-      tmp:    ['tmp']
+      dist:   ['angular-scroll.js', 'angular-scroll.min.js', 'angular-scroll.min.js.map']
     },
     concat: {
       options: {
@@ -59,5 +57,5 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-ngmin');
 
-  grunt.registerTask('default', ['jshint', 'clean', 'concat', 'ngmin', 'uglify', 'clean:tmp']);
+  grunt.registerTask('default', ['jshint', 'clean', 'concat', 'ngmin', 'uglify']);
 };
