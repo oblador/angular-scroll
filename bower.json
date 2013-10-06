@@ -1,0 +1,15 @@
+{
+  "name": "angular-scroll",
+  "version": "0.1.0",
+  "main": "angular-scroll.min.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.0-rc.2"
+  }
+}

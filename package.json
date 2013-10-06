@@ -1,0 +1,19 @@
+{
+  "name": "angular-scroll",
+  "version": "0.1.0",
+  "description": "",
+  "main": "angular-scroll.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joel Arvidsson",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt-ngmin": "0.0.3",
+    "grunt-contrib-uglify": "~0.2.4",
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.4",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-concat": "~0.3.0"
+  }
+}
