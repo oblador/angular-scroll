@@ -12,7 +12,7 @@ Usage
 ```js
 angular.module('myApp', ['duScroll']).
     controller('myCtrl', function($scope, scrollPosition){
-        scrollPosition.listen(function(scrollY) {
+        scrollPosition.observe(function(scrollY) {
             console.log('Scrolled to ', scrollY);
         });
     }

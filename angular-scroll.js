@@ -16,14 +16,14 @@ factory('requestAnimation', function($window, $timeout) {
 angular.module('duScroll.scrollPosition', ['duScroll.requestAnimation']).
 factory('scrollPosition',
   function($window, requestAnimation) {
-    var listeners = [];
+    var observers = [];
     var lastScrollY = 0;
     var currentScrollY = 0;
     
     var executeCallbacks = function(scrollY){
       currentScrollY = lastScrollY;
-      for(var i = 0; i < listeners.length; i++){
-        listeners[i](currentScrollY);
+      for(var i = 0; i < observers.length; i++){
+        observers[i](currentScrollY);
       }
     };
 
@@ -36,8 +36,8 @@ factory('scrollPosition',
     });
 
     return {
-      listen : function(cb){
-        listeners.push(cb);
+      observe : function(cb){
+        observers.push(cb);
       }
     };
 });
