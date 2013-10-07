@@ -23,7 +23,7 @@ factory('scroller',
       var frames = duration/60;
       var animate = function() {
         frame++;
-        var percent = easeout(frame/frames);
+        var percent = (frame === frames ? 1 : easeout(frame/frames));
         $window.scrollTo(
           start.x + Math.ceil(delta.x * percent),
           start.y + Math.ceil(delta.y * percent)
