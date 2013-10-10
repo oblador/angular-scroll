@@ -1,5 +1,5 @@
 angular.module('duScroll.smoothScroll', ['duScroll.scroller']).
-directive('smoothScroll', function(scroller){
+directive('duSmoothScroll', function(scroller){
 
   return {
     link : function($scope, $element, $attr){
