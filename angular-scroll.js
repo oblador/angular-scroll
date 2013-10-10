@@ -1,4 +1,4 @@
-angular.module('duScroll', ['duScroll.scroller', 'duScroll.scrollPosition', 'duScroll.requestAnimation', 'duScroll.smoothScroll']);
+angular.module('duScroll', ['duScroll.scroller', 'duScroll.scrollPosition', 'duScroll.scrollspy', 'duScroll.requestAnimation', 'duScroll.smoothScroll']);
 
 
 angular.module('duScroll.requestAnimation', []).
@@ -60,11 +60,13 @@ factory('scroller',
         x: $window.scrollX
       };
       var delta = {
-        y: y - start.y,
-        x: x - start.x
+        y: Math.round(y - start.y),
+        x: Math.round(x - start.x)
       };
+      if(!delta.x && !delta.y) return;
+
       var frame = 0;
-      var frames = duration/60;
+      var frames = Math.ceil(duration/60);
       var animate = function() {
         frame++;
         var percent = (frame === frames ? 1 : easeout(frame/frames));
@@ -91,25 +93,75 @@ factory('scroller',
 );
 
 angular.module('duScroll.smoothScroll', ['duScroll.scroller']).
-directive('smoothScroll', function(scroller){
+directive('duSmoothScroll', function(scroller){
 
   return {
     link : function($scope, $element, $attr){
       var element = angular.element($element[0]);
       element.on('click', function(e){
-        if(!$attr.href || $attr.href.indexOf('#') !== 0) return;
-        var elem = document.getElementById($attr.href.substring(1));
+        if(!$attr.href || $attr.href.indexOf('#') === -1) return;
+        var elem = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
         if(!elem) return;
         
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
-
+        var offset = -($attr.offset ? parseInt($attr.offset, 10) : 0);
         var pos = elem.getBoundingClientRect();
 
         var delta = pos.top;
-        scroller.scrollDelta(0, pos.top, 1000);
+        scroller.scrollDelta(0, pos.top + (isNaN(offset) ? 0 : offset), 1000);
       });
+    }
+  };
+});
+
+angular.module('duScroll.scrollspy', ['duScroll.scrollPosition']).
+directive('duScrollspy', function(scrollPosition) {
+  var spies = [];
+  var currentlyActive;
+
+  function gotScroll(scrollY) {
+    var toBeActive;
+    for(var spy, scroll, pos, i = 0; i < spies.length; i++) {
+      spy = spies[i];
+      pos = spy.target.getBoundingClientRect();
+      if(pos.top + spy.offset < 20 && pos.top*-1 < pos.height) {
+        if(!toBeActive || toBeActive.top < pos.top) {
+          toBeActive = {
+            top: pos.top,
+            spy: spy
+          };
+        }
+      }
+    }
+    if(toBeActive) {
+      toBeActive = toBeActive.spy;
+    }
+    if(currentlyActive === toBeActive) return;
+    if(currentlyActive) currentlyActive.$element.removeClass('active');
+    if(toBeActive) toBeActive.$element.addClass('active');
+    currentlyActive = toBeActive;
+  }
+
+  function addSpy(target, $element, offset) {
+    if(!spies.length) {
+      scrollPosition.observe(gotScroll);
+    }
+    spies.push({
+      target:   target, 
+      $element: $element, 
+      element:  angular.element($element[0]),
+      offset:   offset
+    });
+  }
+
+  return {
+    link: function ($scope, $element, $attr) {
+      if(!$attr.href || $attr.href.indexOf('#') === -1) return;
+      var target = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
+      if(!target) return;
+      addSpy(target, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0));
     }
   };
 });
