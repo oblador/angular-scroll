@@ -10,7 +10,7 @@ module.exports = function (grunt) {
         src: 'Gruntfile.js'
       },
       lib: {
-        src: ['dist/**/*.js']
+        src: ['src/**/*.js']
       },
     },
     clean: {
