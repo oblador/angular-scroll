@@ -1,1 +1,1 @@
-angular.module('duScroll', ['duScroll.scroller', 'duScroll.scrollPosition', 'duScroll.requestAnimation', 'duScroll.smoothScroll']);
+angular.module('duScroll', ['duScroll.scroller', 'duScroll.scrollPosition', 'duScroll.scrollspy', 'duScroll.requestAnimation', 'duScroll.smoothScroll']);
