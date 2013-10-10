@@ -8,7 +8,7 @@ directive('duScrollspy', function(scrollPosition) {
     for(var spy, scroll, pos, i = 0; i < spies.length; i++) {
       spy = spies[i];
       pos = spy.target.getBoundingClientRect();
-      if(pos.top + spy.offset < 0 && pos.top*-1 < pos.height) {
+      if(pos.top + spy.offset < 20 && pos.top*-1 < pos.height) {
         if(!toBeActive || toBeActive.top < pos.top) {
           toBeActive = {
             top: pos.top,
