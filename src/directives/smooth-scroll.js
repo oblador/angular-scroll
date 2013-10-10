@@ -12,11 +12,11 @@ directive('smoothScroll', function(scroller){
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
-
+        var offset = -($attr.offset ? parseInt($attr.offset, 10) : 0);
         var pos = elem.getBoundingClientRect();
 
         var delta = pos.top;
-        scroller.scrollDelta(0, pos.top, 1000);
+        scroller.scrollDelta(0, pos.top + (isNaN(offset) ? 0 : offset), 1000);
       });
     }
   };
