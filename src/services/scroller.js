@@ -16,11 +16,13 @@ factory('scroller',
         x: $window.scrollX
       };
       var delta = {
-        y: y - start.y,
-        x: x - start.x
+        y: Math.round(y - start.y),
+        x: Math.round(x - start.x)
       };
+      if(!delta.x && !delta.y) return;
+
       var frame = 0;
-      var frames = duration/60;
+      var frames = Math.ceil(duration/60);
       var animate = function() {
         frame++;
         var percent = (frame === frames ? 1 : easeout(frame/frames));
