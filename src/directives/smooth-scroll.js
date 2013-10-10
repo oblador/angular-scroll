@@ -5,8 +5,8 @@ directive('smoothScroll', function(scroller){
     link : function($scope, $element, $attr){
       var element = angular.element($element[0]);
       element.on('click', function(e){
-        if(!$attr.href || $attr.href.indexOf('#') !== 0) return;
-        var elem = document.getElementById($attr.href.substring(1));
+        if(!$attr.href || $attr.href.indexOf('#') === -1) return;
+        var elem = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
         if(!elem) return;
         
         if (e.stopPropagation) e.stopPropagation();
