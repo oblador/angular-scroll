@@ -1,14 +1,19 @@
 angular-scroll
 ==============
 
+2.5K minified or 0.5K gzipped.
+
 Example
 -------
 Check out [the live demo](http://durated.github.io/angular-scroll/) or the [source code](https://github.com/durated/angular-scroll/blob/master/example/index.html).
 
 Install
 -------
+With bower:
 
     $ bower install angular-scroll
+
+Or download the [production version](https://raw.github.com/durated/angular-scroll/master/angular-scroll.min.js) or the [development version](https://raw.github.com/durated/angular-scroll/master/angular-scroll.js).
 
 Usage
 -----
