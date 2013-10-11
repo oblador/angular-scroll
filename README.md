@@ -1,6 +1,10 @@
 angular-scroll
 ==============
 
+Example
+-------
+Check out [the live demo](http://durated.github.io/angular-scroll/) or the [source code](https://github.com/durated/angular-scroll/blob/master/example/index.html).
+
 Install
 -------
 
