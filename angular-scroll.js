@@ -15,20 +15,20 @@ factory('requestAnimation', function($window, $timeout) {
 
 angular.module('duScroll.scrollPosition', ['duScroll.requestAnimation']).
 factory('scrollPosition',
-  function($window, requestAnimation) {
+  function($document, $window, requestAnimation) {
     var observers = [];
     var lastScrollY = 0;
     var currentScrollY = 0;
     
-    var executeCallbacks = function(scrollY){
+    var executeCallbacks = function(){
       currentScrollY = lastScrollY;
       for(var i = 0; i < observers.length; i++){
         observers[i](currentScrollY);
       }
     };
 
-    angular.element($window).on('scroll', function(){
-      lastScrollY = this.scrollY;
+    angular.element($document).on('scroll', function(){
+      lastScrollY = $window.scrollY || document.documentElement.scrollTop;
 
       if(lastScrollY !== currentScrollY){
         requestAnimation(executeCallbacks);
