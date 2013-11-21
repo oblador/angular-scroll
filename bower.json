@@ -1,6 +1,6 @@
 {
   "name": "angular-scroll",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "main": "angular-scroll.min.js",
   "ignore": [
     "**/.*",
@@ -12,6 +12,6 @@
     "src"
   ],
   "dependencies": {
-    "angular": "~1.2.0-rc.2"
+    "angular": "~1.2.1"
   }
 }

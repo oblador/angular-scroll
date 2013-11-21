@@ -27,8 +27,16 @@ factory('scrollPosition',
       }
     };
 
+    var getScrollY = function() {
+      return $window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+    };
+
+    var getScrollX = function() {
+      return $window.scrollX || document.documentElement.scrollLeft || document.body.scrollLeft;
+    };
+
     angular.element($document).on('scroll', function(){
-      lastScrollY = $window.scrollY || document.documentElement.scrollTop;
+      lastScrollY = getScrollY();
 
       if(lastScrollY !== currentScrollY){
         requestAnimation(executeCallbacks);
@@ -38,13 +46,17 @@ factory('scrollPosition',
     return {
       observe : function(cb){
         observers.push(cb);
-      }
+      }, 
+      x: getScrollX, 
+      y: getScrollY
     };
-});
+  }
+);
+
 
 angular.module('duScroll.scroller', ['duScroll.requestAnimation']).
 factory('scroller',
-  function($window, requestAnimation) {
+  function($window, requestAnimation, scrollPosition) {
 
     function easeout(x) {
       return Math.pow(x, 0.7);
@@ -56,8 +68,8 @@ factory('scroller',
         return;
       }
       var start = {
-        y: $window.scrollY,
-        x: $window.scrollX
+        y: scrollPosition.y(),
+        x: scrollPosition.x()
       };
       var delta = {
         y: Math.round(y - start.y),
@@ -82,7 +94,7 @@ factory('scroller',
     }
     
     function scrollDelta(x, y, duration){
-      scrollTo($window.scrollX + (x || 0), $window.scrollY + (y || 0), duration);
+      scrollTo(scrollPosition.x() + (x || 0), scrollPosition.y() + (y || 0), duration);
     }
 
     return {
@@ -91,6 +103,7 @@ factory('scroller',
     };
   }
 );
+
 
 angular.module('duScroll.smoothScroll', ['duScroll.scroller']).
 directive('duSmoothScroll', function(scroller){
@@ -101,7 +114,7 @@ directive('duSmoothScroll', function(scroller){
       element.on('click', function(e){
         if(!$attr.href || $attr.href.indexOf('#') === -1) return;
         var elem = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
-        if(!elem) return;
+        if(!elem || !elem.getBoundingClientRect) return;
         
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
@@ -109,12 +122,12 @@ directive('duSmoothScroll', function(scroller){
         var offset = -($attr.offset ? parseInt($attr.offset, 10) : 0);
         var pos = elem.getBoundingClientRect();
 
-        var delta = pos.top;
         scroller.scrollDelta(0, pos.top + (isNaN(offset) ? 0 : offset), 1000);
       });
     }
   };
 });
+
 
 angular.module('duScroll.scrollspy', ['duScroll.scrollPosition']).
 directive('duScrollspy', function(scrollPosition) {
