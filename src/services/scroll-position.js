@@ -12,8 +12,16 @@ factory('scrollPosition',
       }
     };
 
+    var getScrollY = function() {
+      return $window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+    };
+
+    var getScrollX = function() {
+      return $window.scrollX || document.documentElement.scrollLeft || document.body.scrollLeft;
+    };
+
     angular.element($document).on('scroll', function(){
-      lastScrollY = $window.scrollY || document.documentElement.scrollTop;
+      lastScrollY = getScrollY();
 
       if(lastScrollY !== currentScrollY){
         requestAnimation(executeCallbacks);
@@ -23,6 +31,9 @@ factory('scrollPosition',
     return {
       observe : function(cb){
         observers.push(cb);
-      }
+      }, 
+      x: getScrollX, 
+      y: getScrollY
     };
-});
+  }
+);
