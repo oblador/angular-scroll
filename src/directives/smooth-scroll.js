@@ -7,7 +7,7 @@ directive('duSmoothScroll', function(scroller){
       element.on('click', function(e){
         if(!$attr.href || $attr.href.indexOf('#') === -1) return;
         var elem = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
-        if(!elem) return;
+        if(!elem || !elem.getBoundingClientRect) return;
         
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
@@ -15,7 +15,6 @@ directive('duSmoothScroll', function(scroller){
         var offset = -($attr.offset ? parseInt($attr.offset, 10) : 0);
         var pos = elem.getBoundingClientRect();
 
-        var delta = pos.top;
         scroller.scrollDelta(0, pos.top + (isNaN(offset) ? 0 : offset), 1000);
       });
     }
