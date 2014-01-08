@@ -53,6 +53,11 @@ angular.module('myApp', ['duScroll']).
     var chunk = 200;
     //Scroll 200px down from current scroll position
     scroller.scrollDelta(x, chunk, duration);
+
+    var offset = 30; //pixels; adjust for floating menu, context etc
+    //Scroll to #some-id with 30 px "padding"
+    //Note: Use this in a directive, not with document.getElementById 
+    scroller.scrollToElement(document.getElementById('some-id'), offset, duration);
   }
 );
 ```

@@ -97,9 +97,18 @@ factory('scroller',
       scrollTo(scrollPosition.x() + (x || 0), scrollPosition.y() + (y || 0), duration);
     }
 
+    function scrollToElement(element, offset, duration){
+      if(!element || !element.getBoundingClientRect) return;
+
+      var pos = element.getBoundingClientRect();
+
+      scrollDelta(0, pos.top + (!offset || isNaN(offset) ? 0 : -offset), duration);
+    }
+
     return {
-      scrollTo:    scrollTo,
-      scrollDelta: scrollDelta
+      scrollTo:         scrollTo,
+      scrollToElement:  scrollToElement,
+      scrollDelta:      scrollDelta
     };
   }
 );

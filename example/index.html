@@ -111,17 +111,20 @@
     <p>Shoulder cow tenderloin chuck, pork chop jerky doner leberkas. Chuck sausage hamburger, kevin beef pork chop pork shoulder ground round ball tip turducken flank. Bresaola tri-tip meatloaf, salami venison tail pig shank shankle jowl sausage brisket cow biltong turducken. Swine turducken hamburger ball tip short loin prosciutto kevin jowl tri-tip. Doner meatloaf pork brisket.</p>
   </section>
   <footer>
-    <button ng-click="toTheTop()">Take me back!</button>
+    <button ng-click="toTheTop()">Take me back!</button> or <button ng-click="toSection2()">To section 2</button>
   </footer>
 </div>
 
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
 <script src="http://durated.github.io/angular-scroll/angular-scroll.min.js"></script>
 <script>
 angular.module('myApp', ['duScroll']).
   controller('MyCtrl', function($scope, scroller){
     $scope.toTheTop = function() {
-      scroller.scrollTo(0,0, 1500);
+      scroller.scrollTo(0,0, 5000);
+    }
+    $scope.toSection2 = function() {
+      scroller.scrollToElement(document.getElementById('section-2'), 30, 1500);
     }
   }
 );
