@@ -44,6 +44,16 @@ directive('duScrollspy', function(scrollPosition) {
       var target = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
       if(!target) return;
       addSpy(target, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0));
+
+      $scope.$on("$destroy", function() {
+        currentlyActive = null;
+        for (var i = 0; i < spies.length; i++) {
+          if (spies[i].$element === $element) {
+            spies.splice(i, 1);
+            return;
+          }
+        }
+      });
     }
   };
 });
