@@ -142,6 +142,7 @@ angular.module('duScroll.scrollspy', ['duScroll.scrollPosition']).
 directive('duScrollspy', function(scrollPosition) {
   var spies = [];
   var currentlyActive;
+  var observeAdded = false;
 
   function gotScroll(scrollY) {
     var toBeActive;
@@ -167,8 +168,9 @@ directive('duScrollspy', function(scrollPosition) {
   }
 
   function addSpy(target, $element, offset) {
-    if(!spies.length) {
+    if(!observeAdded) {
       scrollPosition.observe(gotScroll);
+      observeAdded = true;
     }
     spies.push({
       target:   target, 
@@ -184,6 +186,16 @@ directive('duScrollspy', function(scrollPosition) {
       var target = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
       if(!target) return;
       addSpy(target, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0));
+
+      $scope.$on("$destroy", function() {
+        currentlyActive = null;
+        for (var i = 0; i < spies.length; i++) {
+          if (spies[i].$element === $element) {
+            spies.splice(i, 1);
+            return;
+          }
+        }
+      });
     }
   };
 });
