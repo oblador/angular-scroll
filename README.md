@@ -1,7 +1,7 @@
 angular-scroll
 ==============
 
-Only dependent on AngularJS (no jQuery). 2.6K minified or 0.6K gzipped.
+Only dependent on AngularJS (no jQuery). 3.4K minified or 0.7K gzipped.
 
 Example
 -------
@@ -21,8 +21,8 @@ Usage
 ### Scrolling observer
 ```js
 angular.module('myApp', ['duScroll']).
-  controller('myCtrl', function($scope, scrollPosition){
-    scrollPosition.observe(function(scrollY) {
+  controller('MyCtrl', function($scope, $rootScope){
+    $rootScope.$on('$duScrollChanged', function($event, scrollY) {
       console.log('Scrolled to ', scrollY);
     });
   }
