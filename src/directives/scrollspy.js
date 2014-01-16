@@ -8,6 +8,12 @@ directive('duScrollspy', function(scrollPosition) {
     var toBeActive;
     for(var spy, scroll, pos, i = 0; i < spies.length; i++) {
       spy = spies[i];
+
+      if (!spy.target) {
+        spy.target = document.getElementById(spy.targetId);
+        if (!spy.target) continue;
+      }
+
       pos = spy.target.getBoundingClientRect();
       if(pos.top + spy.offset < 20 && pos.top*-1 < pos.height) {
         if(!toBeActive || toBeActive.top < pos.top) {
@@ -27,13 +33,14 @@ directive('duScrollspy', function(scrollPosition) {
     currentlyActive = toBeActive;
   }
 
-  function addSpy(target, $element, offset) {
+  function addSpy(targetId, $element, offset) {
     if(!observeAdded) {
       scrollPosition.observe(gotScroll);
       observeAdded = true;
     }
     spies.push({
-      target:   target, 
+      targetId: targetId,
+      target:   null, 
       $element: $element, 
       element:  angular.element($element[0]),
       offset:   offset
@@ -42,10 +49,10 @@ directive('duScrollspy', function(scrollPosition) {
 
   return {
     link: function ($scope, $element, $attr) {
-      if(!$attr.href || $attr.href.indexOf('#') === -1) return;
-      var target = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
-      if(!target) return;
-      addSpy(target, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0));
+      if (!$attr.href || $attr.href.indexOf('#') === -1) return;
+      var targetId = $attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1);
+      if(!targetId) return;
+      addSpy(targetId, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0));
 
       $scope.$on("$destroy", function() {
         currentlyActive = null;
