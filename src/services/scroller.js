@@ -42,7 +42,10 @@ factory('scroller',
     }
 
     function scrollToElement(element, offset, duration){
-      if(!element || !element.getBoundingClientRect) return;
+      if(!angular.isElement(element)) { return; }
+      //Remove jQuery wrapper (if any)
+      element = element[0] || element;
+      if(!element.getBoundingClientRect) return;
 
       var pos = element.getBoundingClientRect();
 
