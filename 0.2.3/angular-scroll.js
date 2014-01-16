@@ -15,13 +15,12 @@ factory('requestAnimation', function($window, $timeout) {
 
 angular.module('duScroll.scrollPosition', ['duScroll.requestAnimation']).
 factory('scrollPosition',
-  function($document, $window, $rootScope, requestAnimation) {
+  function($document, $window, requestAnimation) {
     var observers = [];
     var lastScrollY = 0;
     var currentScrollY = 0;
     
     var executeCallbacks = function(){
-      $rootScope.$emit('$duScrollChanged', currentScrollY);
       currentScrollY = lastScrollY;
       for(var i = 0; i < observers.length; i++){
         observers[i](currentScrollY);
@@ -43,13 +42,9 @@ factory('scrollPosition',
         requestAnimation(executeCallbacks);
       }
     });
-    var deprecationWarned = false;
+
     return {
       observe : function(cb){
-        if(!deprecationWarned && console && console.warn) {
-          console.warn('scrollPosition.observe is deprecated, use $rootScope.$on(\'$duScrollChanged\') instead');
-          deprecationWarned = true;
-        }
         observers.push(cb);
       }, 
       x: getScrollX, 
@@ -102,21 +97,9 @@ factory('scroller',
       scrollTo(scrollPosition.x() + (x || 0), scrollPosition.y() + (y || 0), duration);
     }
 
-    function scrollToElement(element, offset, duration){
-      if(!angular.isElement(element)) { return; }
-      //Remove jQuery wrapper (if any)
-      element = element[0] || element;
-      if(!element.getBoundingClientRect) return;
-
-      var pos = element.getBoundingClientRect();
-
-      scrollDelta(0, pos.top + (!offset || isNaN(offset) ? 0 : -offset), duration);
-    }
-
     return {
-      scrollTo:         scrollTo,
-      scrollToElement:  scrollToElement,
-      scrollDelta:      scrollDelta
+      scrollTo:    scrollTo,
+      scrollDelta: scrollDelta
     };
   }
 );
@@ -147,42 +130,15 @@ directive('duSmoothScroll', function(scroller){
 
 
 angular.module('duScroll.scrollspy', ['duScroll.scrollPosition']).
-directive('duScrollspy', function($rootScope, scrollPosition) {
+directive('duScrollspy', function(scrollPosition) {
   var spies = [];
   var currentlyActive;
-  var isObserving = false;
 
-  var Spy = function(targetElementOrId, $element, offset) {
-    if(angular.isElement(targetElementOrId)) {
-      this.target = targetElementOrId;
-    } else if(angular.isString(targetElementOrId)) {
-      this.targetId = targetElementOrId;
-    }
-    this.$element = $element;
-    this.offset = offset;
-  };
-
-  Spy.prototype.getTargetElement = function() {
-    if (!this.target && this.targetId) {
-      this.target = document.getElementById(this.targetId);
-    }
-    return this.target;
-  };
-
-  Spy.prototype.getTargetPosition = function() {
-    var target = this.getTargetElement();
-    if(target) {
-      return target.getBoundingClientRect();
-    }
-  };
-
-  function gotScroll($event, scrollY) {
+  function gotScroll(scrollY) {
     var toBeActive;
     for(var spy, scroll, pos, i = 0; i < spies.length; i++) {
       spy = spies[i];
-      pos = spy.getTargetPosition();
-      if (!pos) continue;
-
+      pos = spy.target.getBoundingClientRect();
       if(pos.top + spy.offset < 20 && pos.top*-1 < pos.height) {
         if(!toBeActive || toBeActive.top < pos.top) {
           toBeActive = {
@@ -201,36 +157,24 @@ directive('duScrollspy', function($rootScope, scrollPosition) {
     currentlyActive = toBeActive;
   }
 
-  function addSpy(spy) {
-    if(!isObserving) {
-      $rootScope.$on('$duScrollChanged', gotScroll);
-      isObserving = true;
+  function addSpy(target, $element, offset) {
+    if(!spies.length) {
+      scrollPosition.observe(gotScroll);
     }
-    spies.push(spy);
-  }
-
-  function removeSpy(spy) {
-    if(spy === currentlyActive) {
-      currentlyActive = null;
-    }
-    var i = spies.indexOf(spy);
-    if(i !== -1) {
-      spies.splice(i, 1);
-    }
+    spies.push({
+      target:   target, 
+      $element: $element, 
+      element:  angular.element($element[0]),
+      offset:   offset
+    });
   }
 
   return {
     link: function ($scope, $element, $attr) {
-      if (!$attr.href || $attr.href.indexOf('#') === -1) return;
-      var targetId = $attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1);
-      if(!targetId) return;
-
-      var spy = new Spy(targetId, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0));
-      addSpy(spy);
-
-      $scope.$on('$destroy', function() {
-        removeSpy(spy);
-      });
+      if(!$attr.href || $attr.href.indexOf('#') === -1) return;
+      var target = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
+      if(!target) return;
+      addSpy(target, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0));
     }
   };
 });
