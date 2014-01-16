@@ -2,6 +2,7 @@ angular.module('duScroll.scrollspy', ['duScroll.scrollPosition']).
 directive('duScrollspy', function(scrollPosition) {
   var spies = [];
   var currentlyActive;
+  var observeAdded = false;
 
   function gotScroll(scrollY) {
     var toBeActive;
@@ -27,8 +28,9 @@ directive('duScrollspy', function(scrollPosition) {
   }
 
   function addSpy(target, $element, offset) {
-    if(!spies.length) {
+    if(!observeAdded) {
       scrollPosition.observe(gotScroll);
+      observeAdded = true;
     }
     spies.push({
       target:   target, 
