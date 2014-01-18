@@ -28,6 +28,12 @@ directive('duScrollspy', function($rootScope, scrollPosition) {
     }
   };
 
+  Spy.prototype.flushTargetCache = function() {
+    if(this.targetId) {
+      this.target = undefined;
+    }
+  };
+
   function gotScroll($event, scrollY) {
     var toBeActive;
     for(var spy, scroll, pos, i = 0; i < spies.length; i++) {
@@ -83,6 +89,7 @@ directive('duScrollspy', function($rootScope, scrollPosition) {
       $scope.$on('$destroy', function() {
         removeSpy(spy);
       });
+      $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
     }
   };
 });
