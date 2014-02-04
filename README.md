@@ -62,6 +62,19 @@ angular.module('myApp', ['duScroll']).
 );
 ```
 
+### Configuring scroll speed
+Duration is defined in milliseconds.
+
+To set a scroll duration on a single anchor:
+```html
+<a href="#anchor" du-smooth-scroll duration="5000">Scroll it!</a>
+```
+
+To change the default duration:
+```js
+angular.module('myApp', ['duScroll']).value('duScrollDuration', 5000);
+```
+
 Building
 --------
 
