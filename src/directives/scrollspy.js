@@ -79,8 +79,9 @@ directive('duScrollspy', function($rootScope, scrollPosition) {
 
   return {
     link: function ($scope, $element, $attr) {
-      if (!$attr.href || $attr.href.indexOf('#') === -1) return;
-      var targetId = $attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1);
+      var href = $attr.ngHref || $attr.href;
+      if (!href || href.indexOf('#') === -1) return;
+      var targetId = href.replace(/.*(?=#[^\s]+$)/, '').substring(1);
       if(!targetId) return;
 
       var spy = new Spy(targetId, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0));
