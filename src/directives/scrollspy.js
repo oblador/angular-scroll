@@ -86,6 +86,18 @@ directive('duScrollspy', function($rootScope, scrollPosition) {
       var spy = new Spy(targetId, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0));
       addSpy(spy);
 
+      // evaluate an expression when the element is activated
+      $scope.$watch(function () {
+        return $element.attr('class');
+      }, function (elemClass) {
+        if ($element.hasClass('active')) {
+          var action = $element.attr('du-scrollspy');
+          if (action) {
+            $scope.$eval(action); 
+          }
+        }
+      });
+
       $scope.$on('$destroy', function() {
         removeSpy(spy);
       });
