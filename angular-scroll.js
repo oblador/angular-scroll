@@ -203,8 +203,14 @@ directive('duScrollspy', function($rootScope, scrollPosition) {
       toBeActive = toBeActive.spy;
     }
     if(currentlyActive === toBeActive) return;
-    if(currentlyActive) currentlyActive.$element.removeClass('active');
-    if(toBeActive) toBeActive.$element.addClass('active');
+    if(currentlyActive) {
+      currentlyActive.$element.removeClass('active');
+      $rootScope.$broadcast('duScrollspy:becameInactive', currentlyActive.$element);
+    }
+    if(toBeActive) {
+      toBeActive.$element.addClass('active');
+      $rootScope.$broadcast('duScrollspy:becameActive', toBeActive.$element);
+    }
     currentlyActive = toBeActive;
   }
 
@@ -228,8 +234,9 @@ directive('duScrollspy', function($rootScope, scrollPosition) {
 
   return {
     link: function ($scope, $element, $attr) {
-      if (!$attr.href || $attr.href.indexOf('#') === -1) return;
-      var targetId = $attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1);
+      var href = $attr.ngHref || $attr.href;
+      if (!href || href.indexOf('#') === -1) return;
+      var targetId = href.replace(/.*(?=#[^\s]+$)/, '').substring(1);
       if(!targetId) return;
 
       var spy = new Spy(targetId, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0));
