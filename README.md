@@ -75,6 +75,27 @@ To change the default duration:
 angular.module('myApp', ['duScroll']).value('duScrollDuration', 5000);
 ```
 
+### Scroll spy events
+
+The `duScrollspy` directive fires the global events `duScrollspy:becameActive` and `duScrollspy:becameInactive` with an angular.element wrapped element as first argument. This is nice to have if you want the URL bar to reflect where on the page the visitor are, like this: 
+
+```js
+angular.module('myApp', ['duScroll']).
+  config(function($locationProvider) {
+    $locationProvider.html5Mode(true);
+  }).
+  run(function($rootScope, $location){
+    $rootScope.$on('duScrollspy:becameActive', function($event, $element){
+      //Automaticly update location
+      var hash = $element.prop('hash');
+      if(hash) {
+        $location.hash(hash.substr(1)).replace();
+        $rootScope.$apply();
+      }
+    });
+  });
+```
+
 Building
 --------
 
