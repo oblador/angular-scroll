@@ -54,8 +54,14 @@ directive('duScrollspy', function($rootScope, scrollPosition) {
       toBeActive = toBeActive.spy;
     }
     if(currentlyActive === toBeActive) return;
-    if(currentlyActive) currentlyActive.$element.removeClass('active');
-    if(toBeActive) toBeActive.$element.addClass('active');
+    if(currentlyActive) {
+      currentlyActive.$element.removeClass('active');
+      $rootScope.$broadcast('inactive', currentlyActive.$element);
+    }
+    if(toBeActive) {
+      toBeActive.$element.addClass('active');
+      $rootScope.$broadcast('active', toBeActive.$element);
+    }
     currentlyActive = toBeActive;
   }
 
