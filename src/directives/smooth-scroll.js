@@ -1,5 +1,5 @@
 angular.module('duScroll.smoothScroll', ['duScroll.scroller']).
-directive('duSmoothScroll', function(scroller, duScrollDuration){
+directive('duSmoothScroll', ['scroller', 'duScrollDuration', function(scroller, duScrollDuration){
 
   return {
     link : function($scope, $element, $attr){
@@ -8,7 +8,7 @@ directive('duSmoothScroll', function(scroller, duScrollDuration){
         if(!$attr.href || $attr.href.indexOf('#') === -1) return;
         var elem = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
         if(!elem || !elem.getBoundingClientRect) return;
-        
+
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
@@ -20,4 +20,4 @@ directive('duSmoothScroll', function(scroller, duScrollDuration){
       });
     }
   };
-});
+}]);

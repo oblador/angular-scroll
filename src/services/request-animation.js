@@ -1,5 +1,5 @@
 angular.module('duScroll.requestAnimation', []).
-factory('requestAnimation', function($window, $timeout) {
+factory('requestAnimation', ['$window', '$timeout', function($window, $timeout) {
   return $window.requestAnimationFrame  ||
     $window.webkitRequestAnimationFrame ||
     $window.mozRequestAnimationFrame    ||
@@ -8,4 +8,4 @@ factory('requestAnimation', function($window, $timeout) {
     function fallback( callback ){
       $timeout(callback, 1000 / 60);
     };
-});
+}]);

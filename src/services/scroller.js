@@ -1,5 +1,5 @@
 angular.module('duScroll.scroller', ['duScroll.requestAnimation']).
-factory('scroller',
+factory('scroller', ['$window', 'requestAnimation', 'scrollPosition',
   function($window, requestAnimation, scrollPosition) {
 
     function easeout(x) {
@@ -36,7 +36,7 @@ factory('scroller',
       };
       animate();
     }
-    
+
     function scrollDelta(x, y, duration){
       scrollTo(scrollPosition.x() + (x || 0), scrollPosition.y() + (y || 0), duration);
     }
@@ -58,4 +58,4 @@ factory('scroller',
       scrollDelta:      scrollDelta
     };
   }
-);
+]);

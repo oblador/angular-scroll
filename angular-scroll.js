@@ -2,7 +2,7 @@ angular.module('duScroll', ['duScroll.scroller', 'duScroll.scrollPosition', 'duS
 
 
 angular.module('duScroll.requestAnimation', []).
-factory('requestAnimation', function($window, $timeout) {
+factory('requestAnimation', ['$window', '$timeout', function($window, $timeout) {
   return $window.requestAnimationFrame  ||
     $window.webkitRequestAnimationFrame ||
     $window.mozRequestAnimationFrame    ||
@@ -11,15 +11,16 @@ factory('requestAnimation', function($window, $timeout) {
     function fallback( callback ){
       $timeout(callback, 1000 / 60);
     };
-});
+}]);
+
 
 angular.module('duScroll.scrollPosition', ['duScroll.requestAnimation']).
-factory('scrollPosition',
+factory('scrollPosition', ['$document', '$window', '$rootScope', 'requestAnimation',
   function($document, $window, $rootScope, requestAnimation) {
     var observers = [];
     var lastScrollY = 0;
     var currentScrollY = 0;
-    
+
     var executeCallbacks = function(){
       $rootScope.$emit('$duScrollChanged', currentScrollY);
       currentScrollY = lastScrollY;
@@ -51,16 +52,16 @@ factory('scrollPosition',
           deprecationWarned = true;
         }
         observers.push(cb);
-      }, 
-      x: getScrollX, 
+      },
+      x: getScrollX,
       y: getScrollY
     };
   }
-);
+]);
 
 
 angular.module('duScroll.scroller', ['duScroll.requestAnimation']).
-factory('scroller',
+factory('scroller', ['$window', 'requestAnimation', 'scrollPosition',
   function($window, requestAnimation, scrollPosition) {
 
     function easeout(x) {
@@ -97,7 +98,7 @@ factory('scroller',
       };
       animate();
     }
-    
+
     function scrollDelta(x, y, duration){
       scrollTo(scrollPosition.x() + (x || 0), scrollPosition.y() + (y || 0), duration);
     }
@@ -119,11 +120,11 @@ factory('scroller',
       scrollDelta:      scrollDelta
     };
   }
-);
+]);
 
 
 angular.module('duScroll.smoothScroll', ['duScroll.scroller']).
-directive('duSmoothScroll', function(scroller, duScrollDuration){
+directive('duSmoothScroll', ['scroller', 'duScrollDuration', function(scroller, duScrollDuration){
 
   return {
     link : function($scope, $element, $attr){
@@ -132,7 +133,7 @@ directive('duSmoothScroll', function(scroller, duScrollDuration){
         if(!$attr.href || $attr.href.indexOf('#') === -1) return;
         var elem = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
         if(!elem || !elem.getBoundingClientRect) return;
-        
+
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
@@ -144,11 +145,11 @@ directive('duSmoothScroll', function(scroller, duScrollDuration){
       });
     }
   };
-});
+}]);
 
 
 angular.module('duScroll.scrollspy', ['duScroll.scrollPosition']).
-directive('duScrollspy', function($rootScope, scrollPosition) {
+directive('duScrollspy', ['$rootScope', 'scrollPosition', function($rootScope, scrollPosition) {
   var spies = [];
   var currentlyActive;
   var isObserving = false;
@@ -248,4 +249,4 @@ directive('duScrollspy', function($rootScope, scrollPosition) {
       $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
     }
   };
-});
+}]);

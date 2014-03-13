@@ -1,5 +1,5 @@
 angular.module('duScroll.scrollspy', ['duScroll.scrollPosition']).
-directive('duScrollspy', function($rootScope, scrollPosition) {
+directive('duScrollspy', ['$rootScope', 'scrollPosition', function($rootScope, scrollPosition) {
   var spies = [];
   var currentlyActive;
   var isObserving = false;
@@ -99,4 +99,4 @@ directive('duScrollspy', function($rootScope, scrollPosition) {
       $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
     }
   };
-});
+}]);
