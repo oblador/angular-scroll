@@ -1,10 +1,6 @@
 angular.module('duScroll.scroller', ['duScroll.requestAnimation']).
 factory('scroller',
-  function($window, requestAnimation, scrollPosition) {
-
-    function easeout(x) {
-      return Math.pow(x, 0.7);
-    }
+  function($window, requestAnimation, scrollPosition, duScrollEasing) {
 
     function scrollTo(x, y, duration){
       if(!duration) {
@@ -25,7 +21,8 @@ factory('scroller',
       var frames = Math.ceil(duration/60);
       var animate = function() {
         frame++;
-        var percent = (frame === frames ? 1 : easeout(frame/frames));
+        var percent = (frame === frames ? 1 : duScrollEasing(frame/frames));
+
         $window.scrollTo(
           start.x + Math.ceil(delta.x * percent),
           start.y + Math.ceil(delta.y * percent)

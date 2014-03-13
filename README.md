@@ -75,6 +75,16 @@ To change the default duration:
 angular.module('myApp', ['duScroll']).value('duScrollDuration', 5000);
 ```
 
+### Configuring scroll easing
+Set the `duScrollEasing` value to a function that takes and returns a value between 0 to 1.
+
+```js
+function invertedEasingFunction(x) {
+  return 1-x;
+}
+angular.module('myApp', ['duScroll']).value('duScrollEasing', invertedEasingFunction);
+```
+
 ### Scroll spy events
 
 The `duScrollspy` directive fires the global events `duScrollspy:becameActive` and `duScrollspy:becameInactive` with an angular.element wrapped element as first argument. This is nice to have if you want the URL bar to reflect where on the page the visitor are, like this: 
