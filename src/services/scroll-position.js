@@ -1,10 +1,10 @@
 angular.module('duScroll.scrollPosition', ['duScroll.requestAnimation']).
-factory('scrollPosition',
+factory('scrollPosition', ['$document', '$window', '$rootScope', 'requestAnimation',
   function($document, $window, $rootScope, requestAnimation) {
     var observers = [];
     var lastScrollY = 0;
     var currentScrollY = 0;
-    
+
     var executeCallbacks = function(){
       $rootScope.$emit('$duScrollChanged', currentScrollY);
       currentScrollY = lastScrollY;
@@ -36,9 +36,9 @@ factory('scrollPosition',
           deprecationWarned = true;
         }
         observers.push(cb);
-      }, 
-      x: getScrollX, 
+      },
+      x: getScrollX,
       y: getScrollY
     };
   }
-);
+]);
