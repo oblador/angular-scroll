@@ -10,8 +10,8 @@ factory('scrollPosition',
     };
 
     var observers = [];
-    var lastScrollY = getScrollY();
-    var currentScrollY = 0;
+    var lastScrollY;
+    var currentScrollY;
     
     var executeCallbacks = function(){
       currentScrollY = lastScrollY;
@@ -29,13 +29,7 @@ factory('scrollPosition',
       }
     };
 
-    angular.element($document).on('scroll', onScroll);
-    //Init
-    executeCallbacks();
-    //Redo init after reflows and initial anchor jump
-    angular.element($window).on('load', function() {
-      $timeout(executeCallbacks, 10);
-    });
+    angular.element($document).on('scroll', onScroll).triggerHandler('scroll');
 
     var deprecationWarned = false;
     return {
