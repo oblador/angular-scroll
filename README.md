@@ -39,6 +39,14 @@ angular.module('myApp', ['duScroll']).
 <a href="#anchor" du-scrollspy>Am i active?</a>
 ```
 
+#### Bootstrap
+```html
+<ul class="nav navbar-nav">
+  <li class="active" du-scrollspy="anchor"><a href="#anchor">Link</a></li>
+</ul>
+```
+
+
 ### Manual smooth scrollTo
 ```js
 angular.module('myApp', ['duScroll']).
