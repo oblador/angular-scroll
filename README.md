@@ -42,7 +42,7 @@ angular.module('myApp', ['duScroll']).
 #### Bootstrap
 ```html
 <ul class="nav navbar-nav">
-  <li class="active" du-scrollspy="anchor"><a href="#anchor">Link</a></li>
+  <li du-scrollspy="anchor"><a href="#anchor">Link</a></li>
 </ul>
 ```
 
