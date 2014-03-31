@@ -46,6 +46,16 @@ angular.module('myApp', ['duScroll']).
 </ul>
 ```
 
+#### Multiple spies on same target
+```html
+<ul du-spy-context class="nav navbar-nav">
+  <li du-scrollspy="anchor"><a href="#anchor">Link</a></li>
+</ul>
+<ul du-spy-context class="nav navbar-nav">
+  <li du-scrollspy="anchor"><a href="#anchor">Link</a></li>
+</ul>
+```
+
 
 ### Manual smooth scrollTo
 ```js
