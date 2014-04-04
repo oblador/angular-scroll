@@ -4,21 +4,21 @@ module.exports = function (grunt) {
   grunt.initConfig({
     jshint: {
       options: {
-        jshintrc: '.jshintrc',
+        jshintrc: '.jshintrc'
       },
       gruntfile: {
         src: 'Gruntfile.js'
       },
       lib: {
         src: ['src/**/*.js']
-      },
+      }
     },
     clean: {
       dist:   ['angular-scroll.js', 'angular-scroll.min.js', 'angular-scroll.min.js.map']
     },
     concat: {
       options: {
-        separator: "\n\n",
+        separator: "\n\n"
       },
       dist: {
         src: [
@@ -27,10 +27,10 @@ module.exports = function (grunt) {
           'src/services/scroll-position.js',
           'src/services/scroller.js',
           'src/directives/smooth-scroll.js',
-          'src/directives/scrollspy.js',
+          'src/directives/scrollspy.js'
         ],
-        dest: 'angular-scroll.js',
-      },
+        dest: 'angular-scroll.js'
+      }
     },
     ngmin: {
       dist: {
@@ -48,7 +48,7 @@ module.exports = function (grunt) {
           'angular-scroll.min.js': ['angular-scroll.min.js']
         }
       }
-    },
+    }
   });
 
   // These plugins provide necessary tasks.
