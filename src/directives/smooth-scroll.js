@@ -12,7 +12,7 @@ directive('duSmoothScroll', function(scroller, duScrollDuration, duScrollContext
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
-        var offset = -($attr.offset ? parseInt($attr.offset, 10) : 0);
+        var offset = ($attr.offset ? parseInt($attr.offset, 10) : 0);
         var duration = $attr.duration ? parseInt($attr.duration, 10) : duScrollDuration;
         var context = duScrollContextAPI.getContext($scope);
 
