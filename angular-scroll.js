@@ -8,7 +8,7 @@ var duScrollDefaultEasing = function (x) {
   return 1-Math.pow((1-x)*2, 2)/2;
 };
 
-angular.module('duScroll', ['duScroll.scroller', 'duScroll.scrollPosition', 'duScroll.scrollspy', 'duScroll.requestAnimation', 'duScroll.smoothScroll']).value('duScrollDuration', 1000).value('duScrollEasing', duScrollDefaultEasing);
+angular.module('duScroll', ['duScroll.scroller', 'duScroll.scrollPosition', 'duScroll.scrollspy', 'duScroll.requestAnimation', 'duScroll.smoothScroll', 'duScroll.scrollContext']).value('duScrollDuration', 1000).value('duScrollEasing', duScrollDefaultEasing);
 
 
 angular.module('duScroll.requestAnimation', []).
@@ -27,19 +27,17 @@ angular.module('duScroll.scrollPosition', ['duScroll.requestAnimation']).
 factory('scrollPosition',
   function($document, $window, $rootScope, $timeout, requestAnimation) {
     var getScrollY = function(context) {
-      if(!context){
-        return $window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
-      }else{
-        return context.scrollTop();
+      if(context) {
+        return context.scrollTop;
       }
+      return $window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
     };
 
     var getScrollX = function(context) {
-      if(!context){
-        return $window.scrollX || document.documentElement.scrollLeft || document.body.scrollLeft;
-      }else{
-        return context.scrollLeft();
+      if(context) {
+        return context.scrollLeft;
       }
+      return $window.scrollX || document.documentElement.scrollLeft || document.body.scrollLeft;
     };
 
     var observers = [];
@@ -86,11 +84,11 @@ factory('scroller',
 
     function scrollTo(x, y, duration, context){
       if(!duration) {
-        if(!context){
+        if(context){
+          context.scrollLeft = x;
+          context.scrollTop = y;
+        } else {
           $window.scrollTo(x, y);
-        }else{
-          context.scrollLeft(x);
-          context.scrollTop(y);
         }
 
         return;
@@ -110,11 +108,11 @@ factory('scroller',
       var animate = function() {
         frame++;
         var percent = (frame === frames ? 1 : duScrollEasing(frame/frames));
-        if(!context){
-        $window.scrollTo( start.x + Math.ceil(delta.x * percent), start.y + Math.ceil(delta.y * percent));
-        }else{
-          context.scrollLeft( start.x + Math.ceil(delta.x * percent));
-          context.scrollTop(start.y + Math.ceil(delta.y * percent));
+        if(context){
+          context.scrollLeft = start.x + Math.ceil(delta.x * percent);
+          context.scrollTop = start.y + Math.ceil(delta.y * percent);
+        } else {
+          $window.scrollTo( start.x + Math.ceil(delta.x * percent), start.y + Math.ceil(delta.y * percent));
         }
         if(frame<frames) { requestAnimation(animate); }
       };
@@ -131,9 +129,20 @@ factory('scroller',
       element = element[0] || element;
       if(!element.getBoundingClientRect) return;
 
+      if(!offset || isNaN(offset)) {
+        offset = 0;
+      } else {
+        offset = -offset;
+      }
+
       var pos = element.getBoundingClientRect();
 
-      scrollDelta(0, pos.top + (!offset || isNaN(offset) ? 0 : -offset), duration, context);
+      if(context) {
+        var contextPos = context.getBoundingClientRect();
+        offset -= contextPos.top;
+      }
+
+      scrollDelta(0, pos.top + offset, duration, context);
     }
 
     return {
@@ -145,32 +154,7 @@ factory('scroller',
 );
 
 
-angular.module('duScroll.smoothScroll', ['duScroll.scroller']).
-directive('duSmoothScroll', function(scroller, duScrollDuration){
-
-  return {
-    link : function($scope, $element, $attr){
-      var element = angular.element($element[0]);
-      element.on('click', function(e){
-        if(!$attr.href || $attr.href.indexOf('#') === -1) return;
-        var elem = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
-        if(!elem || !elem.getBoundingClientRect) return;
-        
-        if (e.stopPropagation) e.stopPropagation();
-        if (e.preventDefault) e.preventDefault();
-
-        var offset = -($attr.offset ? parseInt($attr.offset, 10) : 0);
-        var duration = $attr.duration ? parseInt($attr.duration, 10) : duScrollDuration;
-        var pos = elem.getBoundingClientRect();
-
-        scroller.scrollDelta(0, pos.top + (isNaN(offset) ? 0 : offset), duration);
-      });
-    }
-  };
-});
-
-
-angular.module('duScroll.scrollspy', ['duScroll.scrollPosition']).
+angular.module('duScroll.spyAPI', ['duScroll.scrollPosition']).
 factory('duSpyAPI', function($rootScope, scrollPosition) {
   var contexts = {};
   var isObserving = false;
@@ -261,7 +245,62 @@ factory('duSpyAPI', function($rootScope, scrollPosition) {
     removeSpy: removeSpy, 
     createContext: createContext
   };
-}).
+});
+
+
+angular.module('duScroll.scrollContextAPI', []).
+factory('duScrollContextAPI', function() {
+  var contexts = {};
+
+  var setContext = function(scope, element) {
+    var id = scope.$id;
+    contexts[id] = element;
+    return id;
+  };
+
+  var getContext = function(scope) {
+    if(contexts[scope.$id]) {
+      return contexts[scope.$id];
+    }
+    if(scope.$parent) {
+      return getContext(scope.$parent);
+    }
+    return;
+  };
+
+  return {
+    getContext: getContext, 
+    setContext: setContext
+  };
+});
+
+
+angular.module('duScroll.smoothScroll', ['duScroll.scroller', 'duScroll.scrollContextAPI']).
+directive('duSmoothScroll', function(scroller, duScrollDuration, duScrollContextAPI){
+
+  return {
+    link : function($scope, $element, $attr){
+      var element = angular.element($element[0]);
+      element.on('click', function(e){
+        if(!$attr.href || $attr.href.indexOf('#') === -1) return;
+        var elem = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
+        if(!elem || !elem.getBoundingClientRect) return;
+        
+        if (e.stopPropagation) e.stopPropagation();
+        if (e.preventDefault) e.preventDefault();
+
+        var offset = -($attr.offset ? parseInt($attr.offset, 10) : 0);
+        var duration = $attr.duration ? parseInt($attr.duration, 10) : duScrollDuration;
+        var context = duScrollContextAPI.getContext($scope);
+
+        scroller.scrollToElement(elem, offset, duration, context);
+      });
+    }
+  };
+});
+
+
+angular.module('duScroll.spyContext', ['duScroll.spyAPI']).
 directive('duSpyContext', function(duSpyAPI) {
   return {
     restrict: 'A',
@@ -274,7 +313,34 @@ directive('duSpyContext', function(duSpyAPI) {
       };
     }
   };
-}).
+});
+
+
+angular.module('duScroll.scrollContext', ['duScroll.scrollContextAPI']).
+directive('duScrollContext', function(duScrollContextAPI){
+  return {
+    restrict: 'A',
+    scope: true,
+    compile: function compile(tElement, tAttrs, transclude) {
+      return {
+        pre: function preLink($scope, iElement, iAttrs, controller) {
+          iAttrs.$observe('duScrollContext', function(element) {
+            if(angular.isString(element)) {
+              element = document.getElementById(element);
+            }
+            if(!angular.isElement(element)) {
+              element = iElement[0];
+            }
+            duScrollContextAPI.setContext($scope, element);
+          });
+        }
+      };
+    }
+  };
+});
+
+
+angular.module('duScroll.scrollspy', ['duScroll.spyAPI']).
 directive('duScrollspy', function(duSpyAPI) {
   var Spy = function(targetElementOrId, $element, offset) {
     if(angular.isElement(targetElementOrId)) {

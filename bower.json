@@ -1,6 +1,6 @@
 {
   "name": "angular-scroll",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "main": "angular-scroll.min.js",
   "ignore": [
     "**/.*",
@@ -13,6 +13,6 @@
     "Gruntfile.js"
   ],
   "dependencies": {
-    "angular": "~1.2.7"
+    "angular": "~1.2.14"
   }
 }
