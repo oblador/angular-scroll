@@ -26,7 +26,9 @@ module.exports = function (grunt) {
           'src/services/request-animation.js',
           'src/services/scroll-position.js',
           'src/services/scroller.js',
+          'src/services/spy-api.js',
           'src/directives/smooth-scroll.js',
+          'src/directives/spy-context.js',
           'src/directives/scrollspy.js'
         ],
         dest: 'angular-scroll.js'
