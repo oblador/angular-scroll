@@ -45,10 +45,16 @@ directive('duScrollspy', function(duSpyAPI) {
       var spy = new Spy(targetId, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0));
       duSpyAPI.addSpy(spy);
 
-      $scope.$on('$destroy', function() {
+      $scope.$on('$routeChangeStart', function() {
         duSpyAPI.removeSpy(spy);
       });
-      $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
+      $scope.$on('$stateChangeStart', function() {
+        duSpyAPI.removeSpy(spy);
+      });
+      $timeout(function(){
+        $scope.$emit('$duScrollChanged');
+        spy.flushTargetCache.bind(spy)
+      },0);
     }
   };
 });
