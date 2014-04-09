@@ -1,7 +1,7 @@
 angular-scroll
 ==============
 
-Only dependent on AngularJS (no jQuery). 3.4K minified or 0.7K gzipped.
+Only dependent on AngularJS (no jQuery). 5.6K minified or 1.1K gzipped.
 
 Example
 -------
@@ -126,7 +126,8 @@ angular.module('myApp', ['duScroll']).
 
 ### Scrolling within an element
 
-If you want to scroll within a modal or an element with `overflow: auto/scroll` you need to append the `context` argument to your calls. 
+If you want to scroll within a modal or an element with `overflow: auto/scroll` you need to append the `context` argument to your calls. Try [the demo](http://durated.github.io/angular-scroll/context.html) or inspect its [source code](https://github.com/durated/angular-scroll/blob/master/example/context.html).
+
 
 ```js
 var context = someElement;
@@ -160,10 +161,6 @@ If your links lie outside of the scrollable element, wrap them with the `du-scro
   [...]
 </div>
 ```
-
-#### Example
-
-Check out [the live demo](http://durated.github.io/angular-scroll/context.html) or the [source code](https://github.com/durated/angular-scroll/blob/master/example/context.html).
 
 
 Building
