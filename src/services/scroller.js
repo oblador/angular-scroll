@@ -4,11 +4,11 @@ factory('scroller',
 
     function scrollTo(x, y, duration, context){
       if(!duration) {
-        if(!context){
+        if(context){
+          context.scrollLeft = x;
+          context.scrollTop = y;
+        } else {
           $window.scrollTo(x, y);
-        }else{
-          context.scrollLeft(x);
-          context.scrollTop(y);
         }
 
         return;
@@ -28,11 +28,11 @@ factory('scroller',
       var animate = function() {
         frame++;
         var percent = (frame === frames ? 1 : duScrollEasing(frame/frames));
-        if(!context){
-        $window.scrollTo( start.x + Math.ceil(delta.x * percent), start.y + Math.ceil(delta.y * percent));
-        }else{
-          context.scrollLeft( start.x + Math.ceil(delta.x * percent));
-          context.scrollTop(start.y + Math.ceil(delta.y * percent));
+        if(context){
+          context.scrollLeft = start.x + Math.ceil(delta.x * percent);
+          context.scrollTop = start.y + Math.ceil(delta.y * percent);
+        } else {
+          $window.scrollTo( start.x + Math.ceil(delta.x * percent), start.y + Math.ceil(delta.y * percent));
         }
         if(frame<frames) { requestAnimation(animate); }
       };
