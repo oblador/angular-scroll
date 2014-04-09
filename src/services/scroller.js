@@ -49,9 +49,20 @@ factory('scroller',
       element = element[0] || element;
       if(!element.getBoundingClientRect) return;
 
+      if(!offset || isNaN(offset)) {
+        offset = 0;
+      } else {
+        offset = -offset;
+      }
+
       var pos = element.getBoundingClientRect();
 
-      scrollDelta(0, pos.top + (!offset || isNaN(offset) ? 0 : -offset), duration, context);
+      if(context) {
+        var contextPos = context.getBoundingClientRect();
+        offset -= contextPos.top;
+      }
+
+      scrollDelta(0, pos.top + offset, duration, context);
     }
 
     return {

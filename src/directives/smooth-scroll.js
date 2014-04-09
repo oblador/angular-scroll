@@ -15,9 +15,8 @@ directive('duSmoothScroll', function(scroller, duScrollDuration, duScrollContext
         var offset = -($attr.offset ? parseInt($attr.offset, 10) : 0);
         var duration = $attr.duration ? parseInt($attr.duration, 10) : duScrollDuration;
         var context = duScrollContextAPI.getContext($scope);
-        var pos = elem.getBoundingClientRect();
 
-        scroller.scrollDelta(0, pos.top + (isNaN(offset) ? 0 : offset), duration, context);
+        scroller.scrollToElement(elem, offset, duration, context);
       });
     }
   };
