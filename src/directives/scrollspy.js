@@ -1,6 +1,6 @@
-angular.module('duScroll.scrollspy', ['duScroll.spyAPI']).
-directive('duScrollspy', function(duSpyAPI) {
-  var Spy = function(targetElementOrId, $element, offset) {
+angular.module('duScroll.scrollspy', ['duScroll.spyAPI', 'duScroll.scrollContextAPI']).
+directive('duScrollspy', function($timeout, duSpyAPI, duScrollContextAPI) {
+  var Spy = function(targetElementOrId, $element, offset, scrollContext) {
     if(angular.isElement(targetElementOrId)) {
       this.target = targetElementOrId;
     } else if(angular.isString(targetElementOrId)) {
@@ -8,6 +8,7 @@ directive('duScrollspy', function(duSpyAPI) {
     }
     this.$element = $element;
     this.offset = offset;
+    this.scrollContext = scrollContext;
   };
 
   Spy.prototype.getTargetElement = function() {
@@ -19,7 +20,19 @@ directive('duScrollspy', function(duSpyAPI) {
 
   Spy.prototype.getTargetPosition = function() {
     var target = this.getTargetElement();
-    if(target) {
+    if(target && this.scrollContext){
+      var el = target;
+      var top = el.offsetTop;
+      while (el.offsetParent !== this.scrollContext) {
+        top+= el.offsetTop;
+        el = el.offsetParent;
+      }
+      return {
+        top: top - this.scrollContext.scrollTop,
+        height: target.offsetHeight
+      };
+    }
+    if(target && !this.scrollContext) {
       return target.getBoundingClientRect();
     }
   };
@@ -33,7 +46,7 @@ directive('duScrollspy', function(duSpyAPI) {
   return {
     link: function ($scope, $element, $attr) {
       var href = $attr.ngHref || $attr.href;
-      var targetId;
+      var targetId, spy;
 
       if (href && href.indexOf('#') !== -1) {
         targetId = href.replace(/.*(?=#[^\s]+$)/, '').substring(1);
@@ -42,13 +55,19 @@ directive('duScrollspy', function(duSpyAPI) {
       }
       if(!targetId) return;
 
-      var spy = new Spy(targetId, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0));
-      duSpyAPI.addSpy(spy);
+      // Run this in the next execution loop so that the scroll context has a chance
+      // to initialize
+      $timeout(function() {
+        var scrollContext = duScrollContextAPI.getContext($scope);
+        spy = new Spy(targetId, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0), scrollContext);
 
-      $scope.$on('$destroy', function() {
-        duSpyAPI.removeSpy(spy);
-      });
-      $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
+        duSpyAPI.addSpy(spy);
+
+        $scope.$on('$destroy', function() {
+          duSpyAPI.removeSpy(spy);
+        });
+        $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
+      }, 0);
     }
   };
 });
