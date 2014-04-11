@@ -11,6 +11,7 @@ factory('duSpyAPI', function($rootScope, scrollPosition) {
     return id;
   };
   var defaultContextId = createContext($rootScope);
+  var scrollContexts = {};
 
   var gotScroll = function($event, scrollY) {
     var i, id, context, currentlyActive, toBeActive, spies, spy, pos;
@@ -69,6 +70,20 @@ factory('duSpyAPI', function($rootScope, scrollPosition) {
     if(!isObserving) {
       $rootScope.$on('$duScrollChanged', gotScroll);
       isObserving = true;
+    }
+    var sC = spy.scrollContext;
+    if(sC){
+      var scope = angular.element(sC).scope();
+      var scId = scope.$id;
+
+      if(!scrollContexts[scId]){
+        scrollContexts[scId] = angular.element(sC).on('scroll', function(){
+          gotScroll(null,sC.scrollTop);
+        });
+        scope.$on('$destroy', function(){
+          delete scrollContexts[scId];
+        });
+      }
     }
     getContextForSpy(spy).spies.push(spy);
   };
