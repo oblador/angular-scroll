@@ -114,7 +114,7 @@ If your links lie outside of the scrollable element, wrap them with the `du-scro
 ```
 
 ### [All in together now](http://www.youtube.com/watch?v=cx4KtTezEFg&feature=kp)
-The directives play well together, try [the demo](http://durated.github.io/angular-scroll/context.html) or inspect its [source code](https://github.com/durated/angular-scroll/blob/master/example/context.html).
+The directives play well together, try [the demo](http://durated.github.io/angular-scroll/container.html) or inspect its [source code](https://github.com/durated/angular-scroll/blob/master/example/context.html).
 
 ```html
 <ul du-spy-context du-scroll-container="scroll-container">
