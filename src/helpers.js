@@ -19,7 +19,7 @@ run(function($window) {
   };
 
   proto.scrollLeft = function(value) {
-    if(value) {
+    if(angular.isNumber(value)) {
       return this.scrollTo(value, this.scrollTop());
     }
     var el = unwrap(this);
@@ -30,7 +30,7 @@ run(function($window) {
   };
 
   proto.scrollTop = function(value) {
-    if(value) {
+    if(angular.isNumber(value)) {
       return this.scrollTo(this.scrollTop(), value);
     }
     var el = unwrap(this);
