@@ -10,12 +10,24 @@ run(function($window) {
   };
 
   proto.scrollTo = function(left, top) {
+    if(angular.isElement(left)) {
+      return this.scrollToElement(left, top);
+    }
     var el = unwrap(this);
     if(el instanceof HTMLDocument) {
       return $window.scrollTo(left, top);
     }
     el.scrollLeft = left;
     el.scrollTop = top;
+  };
+
+  proto.scrollToElement = function(target) {
+    var el = unwrap(this);
+    var top = this.scrollTop() + unwrap(target).getBoundingClientRect().top;
+    if(el instanceof HTMLElement) {
+      top -= el.getBoundingClientRect().top;
+    }
+    this.scrollTo(0, top);
   };
 
   proto.scrollLeft = function(value) {
