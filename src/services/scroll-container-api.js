@@ -23,9 +23,17 @@ factory('duScrollContainerAPI', function() {
     return id ? containers[id] : id;
   };
 
+  var removeContainer = function(scope) {
+    var id = getContainerId(scope);
+    if(id) {
+      delete containers[id];
+    }
+  };
+
   return {
-    getContainerId: getContainerId, 
-    getContainer: getContainer, 
-    setContainer: setContainer
+    getContainerId:   getContainerId, 
+    getContainer:     getContainer, 
+    setContainer:     setContainer,
+    removeContainer:  removeContainer
   };
 });

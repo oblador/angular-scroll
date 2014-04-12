@@ -14,6 +14,9 @@ directive('duScrollContainer', function(duScrollContainerAPI){
               element = iElement[0];
             }
             duScrollContainerAPI.setContainer($scope, element);
+            $scope.$on('$destroy', function() {
+              duScrollContainerAPI.removeContainer($scope);
+            });
           });
         }
       };
