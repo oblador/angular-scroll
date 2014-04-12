@@ -5,8 +5,16 @@ run(function($window, requestAnimation, duScrollEasing) {
     return proto;
   };
   
+  var isDocument = function(el) {
+    return (typeof HTMLDocument !== 'undefined' && el instanceof HTMLDocument) || (el.nodeType && el.nodeType === el.DOCUMENT_NODE);
+  };
+
+  var isElement = function(el) {
+    return (typeof HTMLElement !== 'undefined' && el instanceof HTMLElement) || (el.nodeType && el.nodeType === el.ELEMENT_NODE);
+  };
+
   var unwrap = function(el) {
-    return el instanceof HTMLElement || el instanceof HTMLDocument ? el : el[0];
+    return isElement(el) || isDocument(el) ? el : el[0];
   };
 
   proto.scrollTo = function(left, top, duration, easing) {
@@ -17,7 +25,7 @@ run(function($window, requestAnimation, duScrollEasing) {
       return this.scrollToAnimated.apply(this, arguments);
     }
     var el = unwrap(this);
-    if(el instanceof HTMLDocument) {
+    if(isDocument(el)) {
       return $window.scrollTo(left, top);
     }
     el.scrollLeft = left;
@@ -52,7 +60,7 @@ run(function($window, requestAnimation, duScrollEasing) {
   proto.scrollToElement = function(target, offset, duration, easing) {
     var el = unwrap(this);
     var top = this.scrollTop() + unwrap(target).getBoundingClientRect().top - offset;
-    if(el instanceof HTMLElement) {
+    if(isElement(el)) {
       top -= el.getBoundingClientRect().top;
     }
     this.scrollTo(0, top, duration, easing);
@@ -63,7 +71,7 @@ run(function($window, requestAnimation, duScrollEasing) {
       return this.scrollTo(value, this.scrollTop(), duration, easing);
     }
     var el = unwrap(this);
-    if(el instanceof HTMLDocument) {
+    if(isDocument(el)) {
       return $window.scrollX || document.documentElement.scrollLeft || document.body.scrollLeft;
     }
     return el.scrollLeft;
@@ -74,7 +82,7 @@ run(function($window, requestAnimation, duScrollEasing) {
       return this.scrollTo(this.scrollTop(), value, duration, easing);
     }
     var el = unwrap(this);
-    if(el instanceof HTMLDocument) {
+    if(isDocument(el)) {
       return $window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
     }
     return el.scrollTop;
