@@ -2,11 +2,11 @@ angular.module('duScroll.scroller', ['duScroll.requestAnimation']).
 factory('scroller',
   function($window, requestAnimation, scrollPosition, duScrollEasing) {
 
-    function scrollTo(x, y, duration, context){
+    function scrollTo(x, y, duration, container){
       if(!duration) {
-        if(context){
-          context.scrollLeft = x;
-          context.scrollTop = y;
+        if(container){
+          container.scrollLeft = x;
+          container.scrollTop = y;
         } else {
           $window.scrollTo(x, y);
         }
@@ -14,8 +14,8 @@ factory('scroller',
         return;
       }
       var start = {
-        y: scrollPosition.y(context),
-        x: scrollPosition.x(context)
+        y: scrollPosition.y(container),
+        x: scrollPosition.x(container)
       };
       var delta = {
         y: Math.round(y - start.y),
@@ -28,9 +28,9 @@ factory('scroller',
       var animate = function() {
         frame++;
         var percent = (frame === frames ? 1 : duScrollEasing(frame/frames));
-        if(context){
-          context.scrollLeft = start.x + Math.ceil(delta.x * percent);
-          context.scrollTop = start.y + Math.ceil(delta.y * percent);
+        if(container){
+          container.scrollLeft = start.x + Math.ceil(delta.x * percent);
+          container.scrollTop = start.y + Math.ceil(delta.y * percent);
         } else {
           $window.scrollTo( start.x + Math.ceil(delta.x * percent), start.y + Math.ceil(delta.y * percent));
         }
@@ -39,11 +39,11 @@ factory('scroller',
       animate();
     }
     
-    function scrollDelta(x, y, duration, context){
-      scrollTo(scrollPosition.x(context) + (x || 0), scrollPosition.y(context) + (y || 0), duration, context);
+    function scrollDelta(x, y, duration, container){
+      scrollTo(scrollPosition.x(container) + (x || 0), scrollPosition.y(container) + (y || 0), duration, container);
     }
 
-    function scrollToElement(element, offset, duration, context){
+    function scrollToElement(element, offset, duration, container){
       if(!angular.isElement(element)) { return; }
       //Remove jQuery wrapper (if any)
       element = element[0] || element;
@@ -57,12 +57,12 @@ factory('scroller',
 
       var pos = element.getBoundingClientRect();
 
-      if(context) {
-        var contextPos = context.getBoundingClientRect();
-        offset -= contextPos.top;
+      if(container) {
+        var containerPos = container.getBoundingClientRect();
+        offset -= containerPos.top;
       }
 
-      scrollDelta(0, pos.top + offset, duration, context);
+      scrollDelta(0, pos.top + offset, duration, container);
     }
 
     return {

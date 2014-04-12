@@ -1,19 +1,19 @@
-angular.module('duScroll.scrollContext', ['duScroll.scrollContextAPI']).
-directive('duScrollContext', function(duScrollContextAPI){
+angular.module('duScroll.scrollContainer', ['duScroll.scrollContainerAPI']).
+directive('duScrollContainer', function(duScrollContainerAPI){
   return {
     restrict: 'A',
     scope: true,
     compile: function compile(tElement, tAttrs, transclude) {
       return {
         pre: function preLink($scope, iElement, iAttrs, controller) {
-          iAttrs.$observe('duScrollContext', function(element) {
+          iAttrs.$observe('duScrollContainer', function(element) {
             if(angular.isString(element)) {
               element = document.getElementById(element);
             }
             if(!angular.isElement(element)) {
               element = iElement[0];
             }
-            duScrollContextAPI.setContext($scope, element);
+            duScrollContainerAPI.setContainer($scope, element);
           });
         }
       };

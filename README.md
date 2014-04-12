@@ -126,35 +126,35 @@ angular.module('myApp', ['duScroll']).
 
 ### Scrolling within an element
 
-If you want to scroll within a modal or an element with `overflow: auto/scroll` you need to append the `context` argument to your calls. Try [the demo](http://durated.github.io/angular-scroll/context.html) or inspect its [source code](https://github.com/durated/angular-scroll/blob/master/example/context.html).
+If you want to scroll within a modal or an element with `overflow: auto/scroll` you need to append the `container` argument to your calls. Try [the demo](http://durated.github.io/angular-scroll/context.html) or inspect its [source code](https://github.com/durated/angular-scroll/blob/master/example/context.html).
 
 
 ```js
-var context = someElement;
+var container = someElement;
 
-scroller.scrollTo(x, y, duration, context);
+scroller.scrollTo(x, y, duration, container);
 
 var chunk = 200;
-scroller.scrollDelta(x, chunk, duration, context);
+scroller.scrollDelta(x, chunk, duration, container);
 
-var offset = 30; //pixels; adjust for floating menu, context etc
-scroller.scrollToElement(document.getElementById('some-id'), offset, duration, context);
+var offset = 30; //pixels; adjust for floating menu, container etc
+scroller.scrollToElement(document.getElementById('some-id'), offset, duration, container);
 ```
 
 #### Scroll Context directive
-If you want to use the `du-smooth-scroll` directive to scroll within an element, you must use it in conjuction with the `du-scroll-context` directive:
+If you want to use the `du-smooth-scroll` directive to scroll within an element, you must use it in conjuction with the `du-scroll-container` directive:
 
 ```html
-<div du-scroll-context>
+<div du-scroll-container>
   <p id="top">This is the top</p>
   <p id="anchor">Scroll to me, or <a href="#top" du-smooth-scroll>the top</a></p>
 </div>
 ```
 
-If your links lie outside of the scrollable element, wrap them with the `du-scroll-context` directive and send the element id as argument:
+If your links lie outside of the scrollable element, wrap them with the `du-scroll-container` directive and send the element id as argument:
 
 ```html
-<ul du-scroll-context="scroll-container">
+<ul du-scroll-container="scroll-container">
   <li><a href="#anchor" du-smooth-scroll>Link</a></li>
 </ul>
 <div id="scroll-container">

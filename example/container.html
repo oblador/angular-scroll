@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-  <title>Angular Scrollspy Demo</title>
+  <title>Angular.js Container Scroll Example</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style type="text/css">
     html, body {
@@ -83,7 +83,7 @@
 </head>
 <body>
 <div class="wrap" ng-controller="MyCtrl">
-  <nav du-scroll-context="container">
+  <nav du-scroll-container="container">
     <ul>
       <li><a href="#section-1" du-smooth-scroll>Section 1</a></li>
       <li><a href="#section-2" du-smooth-scroll>Section 2</a></li>
@@ -91,8 +91,8 @@
       <li><a href="http://github.com/durated/angular-scroll/">Project on Github</a></li>
     </ul>
   </nav>
-  <h1>Angular.js Context Scroll Example</h1>
-  <div id="container" du-scroll-context>
+  <h1>Angular.js Container Scroll Example</h1>
+  <div id="container" du-scroll-container>
     <section id="section-1">
       <h2>Section 1</h2>
       <p><a href="#section-4" du-smooth-scroll>To section 4</a> Bacon ipsum dolor sit amet sausage tail capicola ground round hamburger ham hock. Short ribs pig andouille meatball, pastrami tri-tip fatback ham hock shank kielbasa swine. Rump pancetta jerky kielbasa doner beef ribs tongue hamburger strip steak drumstick andouille shoulder shank flank. Swine drumstick meatball pig beef sausage strip steak.</p>
@@ -131,13 +131,13 @@
 <script>
 angular.module('myApp', ['duScroll']).
   controller('MyCtrl', function($scope, scroller){
-    var context = document.getElementById('container');
+    var container = document.getElementById('container');
 
     $scope.toTheTop = function() {
-      scroller.scrollTo(0,0, 5000, context);
+      scroller.scrollTo(0,0, 5000, container);
     }
     $scope.toSection2 = function() {
-      scroller.scrollToElement(document.getElementById('section-2'), 0, 1500, context);
+      scroller.scrollToElement(document.getElementById('section-2'), 0, 1500, container);
     }
   }
 );

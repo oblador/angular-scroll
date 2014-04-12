@@ -1,16 +1,16 @@
 angular.module('duScroll.scrollPosition', ['duScroll.requestAnimation']).
 factory('scrollPosition',
   function($document, $window, $rootScope, $timeout, requestAnimation) {
-    var getScrollY = function(context) {
-      if(context) {
-        return context.scrollTop;
+    var getScrollY = function(container) {
+      if(container) {
+        return container.scrollTop;
       }
       return $window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
     };
 
-    var getScrollX = function(context) {
-      if(context) {
-        return context.scrollLeft;
+    var getScrollX = function(container) {
+      if(container) {
+        return container.scrollLeft;
       }
       return $window.scrollX || document.documentElement.scrollLeft || document.body.scrollLeft;
     };
