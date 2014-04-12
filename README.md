@@ -37,17 +37,36 @@ Returns current scroll position.
 #### `.scrollTop|scrollLeft( top [, duration [, easing ] ] )` 
 Scrolls to specified position in either axis, with optional animation. 
 
+#### Example
+```js
+angular.module('myApp', ['duScroll']).
+  controller('myCtrl', function($scope, $document) {
+    var top = 400;
+    var duration = 2000; //milliseconds
+
+    //Scroll to the exact position
+    $document.scrollTop(top, duration);
+
+    var offset = 30; //pixels; adjust for floating menu, context etc
+    //Scroll to #some-id with 30 px "padding"
+    //Note: Use this in a directive, not with document.getElementById 
+    var someElement = angular.element(document.getElementById('some-id'));
+    $document.scrollToElement(someElement, offset, duration);
+  }
+);
+```
+
 
 Directives
 ----------
 
-### ’du-smooth-scroll’
+### `du-smooth-scroll`
 Provides smooth anchor scrolling. 
 ```html
 <a href="#anchor" du-smooth-scroll>Scroll it!</a>
 ```
 
-### ’du-scrollspy’
+### `du-scrollspy`
 Observes wether the target element is in the viewport and adds an `active` class if so. Takes optional `offset` and `duration` attributes which is passed on to `.scrollTo`,
 
 ```html
@@ -109,10 +128,11 @@ The directives play well together, try [the demo](http://durated.github.io/angul
 </div>
 ```
 
-Example API Usage
------------------
+Observing Scroll Position
+-------------------------
 
-### Scroll position
+**NOTE:** the `$duScrollChanged` event and the `scrollPosition` service are deprecated. Use `angular.element().on()` together with `.scrollTop()` instead. 
+
 ```js
 angular.module('myApp', ['duScroll']).
   controller('MyCtrl', function($scope, $document){
@@ -123,25 +143,6 @@ angular.module('myApp', ['duScroll']).
     container.on('scroll', function() {
       console.log('Container scrolled to ', container.scrollLeft(), container.scrollTop());
     });
-  }
-);
-```
-
-### Manual smooth scrollTo
-```js
-angular.module('myApp', ['duScroll']).
-  controller('myCtrl', function($document) {
-    var top = 400;
-    var duration = 2000; //milliseconds
-
-    //Scroll to the exact position
-    $document.scrollTop(top, duration);
-
-    var offset = 30; //pixels; adjust for floating menu, context etc
-    //Scroll to #some-id with 30 px "padding"
-    //Note: Use this in a directive, not with document.getElementById 
-    var someElement = angular.element(document.getElementById('some-id'));
-    $document.scrollToElement(someElement, offset, duration);
   }
 );
 ```
