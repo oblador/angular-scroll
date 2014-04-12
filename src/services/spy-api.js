@@ -1,22 +1,16 @@
-angular.module('duScroll.spyAPI', ['duScroll.scrollPosition']).
-factory('duSpyAPI', function($rootScope, scrollPosition) {
-  var contexts = {};
-  var isObserving = false;
+angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI']).
+factory('spyAPI', function($rootScope, scrollContainerAPI) {
+  var createScrollHandler = function(context) {
+    return function() {
+      var container = context.container, 
+          containerEl = container[0],
+          containerOffset = 0;
 
-  var createContext = function($scope) {
-    var id = $scope.$id;
-    contexts[id] = {
-      spies: []
-    };
-    return id;
-  };
-  var defaultContextId = createContext($rootScope);
+      if(containerEl instanceof HTMLElement) {
+        containerOffset = containerEl.getBoundingClientRect().top;
+      }
 
-  var gotScroll = function($event, scrollY) {
-    var i, id, context, currentlyActive, toBeActive, spies, spy, pos;
-
-    for(id in contexts) {
-      context = contexts[id];
+      var i, currentlyActive, toBeActive, spies, spy, pos;
       spies = context.spies;
       currentlyActive = context.currentlyActive;
       toBeActive = undefined;
@@ -24,9 +18,9 @@ factory('duSpyAPI', function($rootScope, scrollPosition) {
       for(i = 0; i < spies.length; i++) {
         spy = spies[i];
         pos = spy.getTargetPosition();
-        if (!pos) continue;
+        if (!pos) return;
 
-        if(pos.top + spy.offset < 20 && pos.top*-1 < pos.height) {
+        if(pos.top + spy.offset - containerOffset < 20 && (pos.top*-1 + containerOffset) < pos.height) {
           if(!toBeActive || toBeActive.top < pos.top) {
             toBeActive = {
               top: pos.top,
@@ -38,7 +32,7 @@ factory('duSpyAPI', function($rootScope, scrollPosition) {
       if(toBeActive) {
         toBeActive = toBeActive.spy;
       }
-      if(currentlyActive === toBeActive) continue;
+      if(currentlyActive === toBeActive) return;
       if(currentlyActive) {
         currentlyActive.$element.removeClass('active');
         $rootScope.$broadcast('duScrollspy:becameInactive', currentlyActive.$element);
@@ -48,8 +42,37 @@ factory('duSpyAPI', function($rootScope, scrollPosition) {
         $rootScope.$broadcast('duScrollspy:becameActive', toBeActive.$element);
       }
       context.currentlyActive = toBeActive;
-    }
+    };
   };
+
+  var contexts = {};
+
+  var createContext = function($scope) {
+    var id = $scope.$id;
+    var context = {
+      spies: []
+    };
+    
+    context.handler = createScrollHandler(context);
+    contexts[id] = context;
+    
+    $scope.$on('$destroy', function() {
+      destroyContext($scope);
+    });
+
+    return id;
+  };
+
+  var destroyContext = function($scope) {
+    var id = $scope.$id;
+    var context = contexts[id], container = context.container;
+    if(container) {
+      container.off('scroll', context.handler);
+    }
+    delete contexts[id];
+  };
+
+  var defaultContextId = createContext($rootScope);
 
   var getContextForScope = function(scope) {
     if(contexts[scope.$id]) {
@@ -66,11 +89,12 @@ factory('duSpyAPI', function($rootScope, scrollPosition) {
   };
 
   var addSpy = function(spy) {
-    if(!isObserving) {
-      $rootScope.$on('$duScrollChanged', gotScroll);
-      isObserving = true;
-    }
+    var context = getContextForSpy(spy);
     getContextForSpy(spy).spies.push(spy);
+    if(!context.container) {
+      context.container = scrollContainerAPI.getContainer(spy.$element.scope());
+      context.container.on('scroll', context.handler).triggerHandler('scroll');
+    }
   };
 
   var removeSpy = function(spy) {
@@ -87,6 +111,7 @@ factory('duSpyAPI', function($rootScope, scrollPosition) {
   return {
     addSpy: addSpy,
     removeSpy: removeSpy, 
-    createContext: createContext
+    createContext: createContext,
+    destroyContext: destroyContext
   };
 });

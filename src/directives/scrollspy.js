@@ -1,5 +1,5 @@
 angular.module('duScroll.scrollspy', ['duScroll.spyAPI']).
-directive('duScrollspy', function(duSpyAPI) {
+directive('duScrollspy', function(spyAPI, $timeout) {
   var Spy = function(targetElementOrId, $element, offset) {
     if(angular.isElement(targetElementOrId)) {
       this.target = targetElementOrId;
@@ -42,13 +42,17 @@ directive('duScrollspy', function(duSpyAPI) {
       }
       if(!targetId) return;
 
-      var spy = new Spy(targetId, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0));
-      duSpyAPI.addSpy(spy);
+      // Run this in the next execution loop so that the scroll context has a chance
+      // to initialize
+      $timeout(function() {
+        var spy = new Spy(targetId, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0));
+        spyAPI.addSpy(spy);
 
-      $scope.$on('$destroy', function() {
-        duSpyAPI.removeSpy(spy);
-      });
-      $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
+        $scope.$on('$destroy', function() {
+          spyAPI.removeSpy(spy);
+        });
+        $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
+      }, 0);
     }
   };
 });

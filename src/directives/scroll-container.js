@@ -1,5 +1,5 @@
 angular.module('duScroll.scrollContainer', ['duScroll.scrollContainerAPI']).
-directive('duScrollContainer', function(duScrollContainerAPI){
+directive('duScrollContainer', function(scrollContainerAPI){
   return {
     restrict: 'A',
     scope: true,
@@ -11,9 +11,9 @@ directive('duScrollContainer', function(duScrollContainerAPI){
               element = document.getElementById(element);
             }
             element = (angular.isElement(element) ? angular.element(element) : iElement);
-            duScrollContainerAPI.setContainer($scope, element);
+            scrollContainerAPI.setContainer($scope, element);
             $scope.$on('$destroy', function() {
-              duScrollContainerAPI.removeContainer($scope);
+              scrollContainerAPI.removeContainer($scope);
             });
           });
         }

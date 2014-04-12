@@ -1,5 +1,5 @@
 angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scrollContainerAPI']).
-directive('duSmoothScroll', function(duScrollDuration, duScrollContainerAPI){
+directive('duSmoothScroll', function(duScrollDuration, scrollContainerAPI){
 
   return {
     link : function($scope, $element, $attr){
@@ -14,7 +14,7 @@ directive('duSmoothScroll', function(duScrollDuration, duScrollContainerAPI){
 
         var offset = ($attr.offset ? parseInt($attr.offset, 10) : 0);
         var duration = $attr.duration ? parseInt($attr.duration, 10) : duScrollDuration;
-        var container = duScrollContainerAPI.getContainer($scope);
+        var container = scrollContainerAPI.getContainer($scope);
 
         container.scrollToElement(
           angular.element(target), 
