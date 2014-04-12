@@ -119,12 +119,13 @@
 <script src="http://durated.github.io/angular-scroll/angular-scroll.min.js"></script>
 <script>
 angular.module('myApp', ['duScroll']).
-  controller('MyCtrl', function($scope, scroller){
+  controller('MyCtrl', function($scope, $document){
     $scope.toTheTop = function() {
-      scroller.scrollTo(0,0, 5000);
+      $document.scrollTop(0, 5000);
     }
+    var section2 = angular.element(document.getElementById('section-2'));
     $scope.toSection2 = function() {
-      scroller.scrollToElement(document.getElementById('section-2'), 30, 1500);
+      $document.scrollTo(section2, 1000);
     }
   }
 );
