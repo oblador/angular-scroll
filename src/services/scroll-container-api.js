@@ -1,5 +1,5 @@
 angular.module('duScroll.scrollContainerAPI', []).
-factory('duScrollContainerAPI', function() {
+factory('duScrollContainerAPI', function($document) {
   var containers = {};
 
   var setContainer = function(scope, element) {
@@ -20,7 +20,7 @@ factory('duScrollContainerAPI', function() {
 
   var getContainer = function(scope) {
     var id = getContainerId(scope);
-    return id ? containers[id] : id;
+    return id ? containers[id] : $document;
   };
 
   var removeContainer = function(scope) {

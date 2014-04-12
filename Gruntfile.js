@@ -23,9 +23,9 @@ module.exports = function (grunt) {
       dist: {
         src: [
           'src/module.js', 
+          'src/helpers.js',
           'src/services/request-animation.js',
           'src/services/scroll-position.js',
-          'src/services/scroller.js',
           'src/services/spy-api.js',
           'src/services/scroll-container-api.js',
           'src/directives/smooth-scroll.js',

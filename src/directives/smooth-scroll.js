@@ -1,13 +1,13 @@
-angular.module('duScroll.smoothScroll', ['duScroll.scroller', 'duScroll.scrollContainerAPI']).
-directive('duSmoothScroll', function(scroller, duScrollDuration, duScrollContainerAPI){
+angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scrollContainerAPI']).
+directive('duSmoothScroll', function(duScrollDuration, duScrollContainerAPI){
 
   return {
     link : function($scope, $element, $attr){
       var element = angular.element($element[0]);
       element.on('click', function(e){
         if(!$attr.href || $attr.href.indexOf('#') === -1) return;
-        var elem = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
-        if(!elem || !elem.getBoundingClientRect) return;
+        var target = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
+        if(!target || !target.getBoundingClientRect) return;
         
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
@@ -16,7 +16,11 @@ directive('duSmoothScroll', function(scroller, duScrollDuration, duScrollContain
         var duration = $attr.duration ? parseInt($attr.duration, 10) : duScrollDuration;
         var container = duScrollContainerAPI.getContainer($scope);
 
-        scroller.scrollToElement(elem, offset, duration, container);
+        container.scrollToElement(
+          angular.element(target), 
+          isNaN(offset) ? 0 : offset, 
+          isNaN(duration) ? 0 : duration
+        );
       });
     }
   };

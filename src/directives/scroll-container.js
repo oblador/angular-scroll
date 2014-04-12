@@ -10,9 +10,7 @@ directive('duScrollContainer', function(duScrollContainerAPI){
             if(angular.isString(element)) {
               element = document.getElementById(element);
             }
-            if(!angular.isElement(element)) {
-              element = iElement[0];
-            }
+            element = (angular.isElement(element) ? angular.element(element) : iElement);
             duScrollContainerAPI.setContainer($scope, element);
             $scope.$on('$destroy', function() {
               duScrollContainerAPI.removeContainer($scope);
