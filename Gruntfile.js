@@ -51,28 +51,6 @@ module.exports = function (grunt) {
           'angular-scroll.min.js': ['angular-scroll.min.js']
         }
       }
-    },
-    karma: {
-      unit: {
-        configFile: './test/karma-unit.conf.js',
-        autoWatch: false,
-        singleRun: true
-      },
-      midway: {
-        configFile: './test/karma-midway.conf.js',
-        autoWatch: false,
-        singleRun: true
-      },
-    },
-    connect: {
-      options: {
-        base: 'src/'
-      },
-      testserver: {
-        options: {
-          port: 9999
-        }
-      },
     }
   });
 
@@ -81,11 +59,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-ngmin');
-  grunt.loadNpmTasks('grunt-karma');
 
   grunt.registerTask('default', ['jshint', 'clean', 'concat', 'ngmin', 'uglify']);
-  grunt.registerTask('test:unit', ['karma:unit']);
-  grunt.registerTask('test:midway', ['connect:testserver','karma:midway']);
 };
