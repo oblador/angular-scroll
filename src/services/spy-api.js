@@ -112,6 +112,7 @@ factory('spyAPI', function($rootScope, scrollContainerAPI) {
     addSpy: addSpy,
     removeSpy: removeSpy, 
     createContext: createContext,
-    destroyContext: destroyContext
+    destroyContext: destroyContext,
+    getContextForScope: getContextForScope
   };
 });

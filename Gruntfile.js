@@ -53,6 +53,11 @@ module.exports = function (grunt) {
       }
     },
     karma: {
+      unit: {
+        configFile: './test/karma-unit.conf.js',
+        autoWatch: false,
+        singleRun: true
+      },
       midway: {
         configFile: './test/karma-midway.conf.js',
         autoWatch: false,
@@ -81,5 +86,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-karma');
 
   grunt.registerTask('default', ['jshint', 'clean', 'concat', 'ngmin', 'uglify']);
+  grunt.registerTask('test:unit', ['karma:unit']);
   grunt.registerTask('test:midway', ['connect:testserver','karma:midway']);
 };
