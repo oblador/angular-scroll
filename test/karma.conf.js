@@ -1,14 +1,16 @@
+var testFiles = [
+  'bower_components/angular/angular.js',
+  'bower_components/angular-mocks/angular-mocks.js',
+  'src/**/*.js',
+  'test/unit/**/*.js'
+];
+
 module.exports = function(config){
   config.set({
 
     basePath : '../',
 
-    files : [
-      'bower_components/angular/angular.js',
-      'bower_components/angular-mocks/angular-mocks.js',
-      'src/**/*.js',
-      'test/unit/**/*.js'
-    ],
+    files : testFiles,
 
     autoWatch : true,
 
@@ -29,3 +31,5 @@ module.exports = function(config){
 
   });
 };
+
+module.exports.testFiles = testFiles;

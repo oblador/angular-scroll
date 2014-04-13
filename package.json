@@ -41,6 +41,7 @@
     "gulp-jshint": "~1.5.3",
     "gulp-concat": "~2.2.0",
     "gulp-rename": "~1.2.0",
-    "gulp-clean": "~0.2.4"
+    "gulp-clean": "~0.2.4",
+    "gulp-karma": "0.0.4"
   }
 }

@@ -201,4 +201,10 @@ angular.module('myApp', ['duScroll']).
 Building
 --------
 
-    $ grunt
+    $ gulp
+
+Tests
+-----
+
+    $ npm test
+ 

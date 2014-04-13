@@ -5,6 +5,9 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var ngmin  = require('gulp-ngmin');
 var rename = require('gulp-rename');
+var karma = require('gulp-karma');
+var karmaConfPath = './test/karma.conf.js';
+var karmaConf = require(karmaConfPath);
 
 var sources = [
   'src/module.js', 
@@ -31,6 +34,17 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('default'));
 });
 
+gulp.task('test', function() {
+  return gulp.src(karmaConf.testFiles)
+    .pipe(karma({
+      configFile: karmaConfPath,
+      action: 'run'
+    }))
+    .on('error', function(err) {
+      throw err;
+    });
+});
+
 gulp.task('compress', function() {
   gulp.src(sources)
     .pipe(concat('angular-scroll.js', { newLine: '\n\n' }))
@@ -43,4 +57,4 @@ gulp.task('compress', function() {
     .pipe(gulp.dest('./'))
 });
 
-gulp.task('default', ['lint', 'clean', 'compress']);
+gulp.task('default', ['lint', 'test', 'clean', 'compress']);
