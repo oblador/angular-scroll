@@ -43,7 +43,7 @@ run(function($window, requestAnimation, duScrollEasing) {
 
     if(!deltaLeft && !deltaTop) return;
 
-    var frame = 0, frames = Math.ceil(duration/60);
+    var frame = 0, frames = Math.ceil(duration*60/1000);
 
     var animate = function() {
       frame++;
