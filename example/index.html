@@ -122,7 +122,9 @@
 angular.module('myApp', ['duScroll']).
   controller('MyCtrl', function($scope, $document){
     $scope.toTheTop = function() {
-      $document.scrollTop(0, 5000);
+      $document.scrollTop(0, 5000).then(function() { 
+        console && console.log('You just scrolled to the top!');
+      });
     }
     var section2 = angular.element(document.getElementById('section-2'));
     $scope.toSection2 = function() {

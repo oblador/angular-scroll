@@ -37,6 +37,9 @@ Returns current scroll position.
 #### `.scrollTop|scrollLeft( top [, duration [, easing ] ] )` 
 Scrolls to specified position in either axis, with optional animation. 
 
+#### Promises
+Animated scrolling returns a `$q` promise, it will resolve when the scrolling has finished or be rejected if cancelled (by starting another scroll animation before it finished).
+
 #### Example
 ```js
 angular.module('myApp', ['duScroll']).
@@ -45,7 +48,9 @@ angular.module('myApp', ['duScroll']).
     var duration = 2000; //milliseconds
 
     //Scroll to the exact position
-    $document.scrollTop(top, duration);
+    $document.scrollTop(top, duration).then(function() {
+      console && console.log('You just scrolled to the top!');
+    });
 
     var offset = 30; //pixels; adjust for floating menu, context etc
     //Scroll to #some-id with 30 px "padding"

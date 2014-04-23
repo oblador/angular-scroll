@@ -1,5 +1,5 @@
 angular.module('duScroll.scrollHelpers', []).
-run(function($window, cancelAnimation, requestAnimation, duScrollEasing) {
+run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
   var proto = angular.element.prototype;
   this.$get = function() {
     return proto;
@@ -32,7 +32,7 @@ run(function($window, cancelAnimation, requestAnimation, duScrollEasing) {
     el.scrollTop = top;
   };
 
-  var scrollAnimation;
+  var scrollAnimation, deferred;
   proto.scrollToAnimated = function(left, top, duration, easing) {
     if(duration && !easing) {
       easing = duScrollEasing;
@@ -47,8 +47,10 @@ run(function($window, cancelAnimation, requestAnimation, duScrollEasing) {
     var startTime = null;
     if(scrollAnimation) {
       cancelAnimation(scrollAnimation);
+      deferred.reject();
     }
     var el = this;
+    deferred = $q.defer();
 
     var animationStep = function(timestamp) {
       if (startTime === null) {
@@ -62,11 +64,16 @@ run(function($window, cancelAnimation, requestAnimation, duScrollEasing) {
         startLeft + Math.ceil(deltaLeft * percent),
         startTop + Math.ceil(deltaTop * percent)
       );
-
-      scrollAnimation = (percent < 1 ? requestAnimation(animationStep) : null);
+      if(percent < 1) {
+        scrollAnimation = requestAnimation(animationStep);
+      } else {
+        scrollAnimation = null;
+        deferred.resolve();
+      }
     };
 
     scrollAnimation = requestAnimation(animationStep);
+    return deferred.promise;
   };
 
   proto.scrollToElement = function(target, offset, duration, easing) {
@@ -75,7 +82,7 @@ run(function($window, cancelAnimation, requestAnimation, duScrollEasing) {
     if(isElement(el)) {
       top -= el.getBoundingClientRect().top;
     }
-    this.scrollTo(0, top, duration, easing);
+    return this.scrollTo(0, top, duration, easing);
   };
 
   proto.scrollLeft = function(value, duration, easing) {
