@@ -1,5 +1,5 @@
 angular.module('duScroll.scrollHelpers', []).
-run(function($window, requestAnimation, duScrollEasing) {
+run(function($window, cancelAnimation, requestAnimation, duScrollEasing) {
   var proto = angular.element.prototype;
   this.$get = function() {
     return proto;
@@ -32,6 +32,7 @@ run(function($window, requestAnimation, duScrollEasing) {
     el.scrollTop = top;
   };
 
+  var scrollAnimation;
   proto.scrollToAnimated = function(left, top, duration, easing) {
     if(duration && !easing) {
       easing = duScrollEasing;
@@ -43,18 +44,30 @@ run(function($window, requestAnimation, duScrollEasing) {
 
     if(!deltaLeft && !deltaTop) return;
 
-    var frame = 0, frames = Math.ceil(duration*60/1000);
+    var startTime = null;
+    if(scrollAnimation) {
+      cancelAnimation(scrollAnimation);
+    }
 
-    var animate = function() {
-      frame++;
-      var percent = (frame === frames ? 1 : easing(frame/frames));
+    var animationStep = function(timestamp) {
+      if (startTime === null) {
+        startTime = timestamp;
+      }
+
+      var progress = timestamp - startTime;
+      var percent = (progress >= duration ? 1 : easing(progress/duration));
+      
       this.scrollTo(
         startLeft + Math.ceil(deltaLeft * percent),
         startTop + Math.ceil(deltaTop * percent)
       );
-      if(frame<frames) { requestAnimation(animate); }
+
+      if(percent < 1) { 
+        scrollAnimation = requestAnimation(animationStep);
+      }
     }.bind(this);
-    animate();
+
+    scrollAnimation = requestAnimation(animationStep);
   };
 
   proto.scrollToElement = function(target, offset, duration, easing) {

@@ -14,5 +14,5 @@ angular.module('duScroll', [
   'duScroll.smoothScroll', 
   'duScroll.scrollContainer', 
   'duScroll.scrollHelpers'
-]).value('duScrollDuration', 1000)
+]).value('duScrollDuration', 350)
   .value('duScrollEasing', duScrollDefaultEasing);
