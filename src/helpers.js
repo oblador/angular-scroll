@@ -48,6 +48,7 @@ run(function($window, cancelAnimation, requestAnimation, duScrollEasing) {
     if(scrollAnimation) {
       cancelAnimation(scrollAnimation);
     }
+    var el = this;
 
     var animationStep = function(timestamp) {
       if (startTime === null) {
@@ -57,15 +58,13 @@ run(function($window, cancelAnimation, requestAnimation, duScrollEasing) {
       var progress = timestamp - startTime;
       var percent = (progress >= duration ? 1 : easing(progress/duration));
       
-      this.scrollTo(
+      el.scrollTo(
         startLeft + Math.ceil(deltaLeft * percent),
         startTop + Math.ceil(deltaTop * percent)
       );
 
-      if(percent < 1) { 
-        scrollAnimation = requestAnimation(animationStep);
-      }
-    }.bind(this);
+      scrollAnimation = (percent < 1 ? requestAnimation(animationStep) : null);
+    };
 
     scrollAnimation = requestAnimation(animationStep);
   };

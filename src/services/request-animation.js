@@ -9,7 +9,7 @@ factory('polyfill', function($window) {
     }
     var suffix = fnName.substr(0, 1).toUpperCase() + fnName.substr(1);
     for(var key, i = 0; i < vendors.length; i++) {
-      key = vendors[x]+suffix;
+      key = vendors[i]+suffix;
       if($window[key]) {
         return $window[key];
       }

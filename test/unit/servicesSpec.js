@@ -15,7 +15,7 @@ describe('service', function() {
         timerCallback = jasmine.createSpy("timerCallback");
       });
 
-      it('should be called within 20ms', function(done){inject(['requestAnimation',function(requestAnimation) {
+      it('should be called within 100ms', function(done){inject(['requestAnimation',function(requestAnimation) {
         requestAnimation(timerCallback);
         expect(timerCallback).not.toHaveBeenCalled();
         setTimeout(function() {

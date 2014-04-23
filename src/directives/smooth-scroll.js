@@ -3,8 +3,7 @@ directive('duSmoothScroll', function(duScrollDuration, scrollContainerAPI){
 
   return {
     link : function($scope, $element, $attr){
-      var element = angular.element($element[0]);
-      element.on('click', function(e){
+      $element.on('click', function(e){
         if(!$attr.href || $attr.href.indexOf('#') === -1) return;
         var target = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
         if(!target || !target.getBoundingClientRect) return;
