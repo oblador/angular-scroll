@@ -18,7 +18,7 @@ factory('spyAPI', function($rootScope, scrollContainerAPI) {
       for(i = 0; i < spies.length; i++) {
         spy = spies[i];
         pos = spy.getTargetPosition();
-        if (!pos) return;
+        if (!pos) continue;
 
         if(pos.top + spy.offset - containerOffset < 20 && (pos.top*-1 + containerOffset) < pos.height) {
           if(!toBeActive || toBeActive.top < pos.top) {
