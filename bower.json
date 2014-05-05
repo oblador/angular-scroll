@@ -1,6 +1,6 @@
 {
   "name": "angular-scroll",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "main": "angular-scroll.min.js",
   "ignore": [
     "**/.*",
