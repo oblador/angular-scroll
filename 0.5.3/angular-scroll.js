@@ -105,42 +105,28 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
     return this.scrollTo(0, top, duration, easing);
   };
 
-  var overloaders = {
-    scrollLeft: function(value, duration, easing) {
-      if(angular.isNumber(value)) {
-        return this.scrollTo(value, this.scrollTop(), duration, easing);
-      }
-      var el = unwrap(this);
-      if(isDocument(el)) {
-        return $window.scrollX || document.documentElement.scrollLeft || document.body.scrollLeft;
-      }
-      return el.scrollLeft;
-    }, 
-    scrollTop: function(value, duration, easing) {
-      if(angular.isNumber(value)) {
-        return this.scrollTo(this.scrollTop(), value, duration, easing);
-      }
-      var el = unwrap(this);
-      if(isDocument(el)) {
-        return $window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
-      }
-      return el.scrollTop;
+  proto.scrollLeft = function(value, duration, easing) {
+    if(angular.isNumber(value)) {
+      return this.scrollTo(value, this.scrollTop(), duration, easing);
     }
+    var el = unwrap(this);
+    if(isDocument(el)) {
+      return $window.scrollX || document.documentElement.scrollLeft || document.body.scrollLeft;
+    }
+    return el.scrollLeft;
   };
 
-  //Add duration and easing functionality to existing jQuery getter/setters 
-  var overloadScrollPos = function(superFn, overloadFn) {
-    return function(value, duration, easing) {
-      if(duration) {
-        return overloadFn.apply(this, arguments);
-      }
-      return superFn.apply(this, arguments);
-    };
+  proto.scrollTop = function(value, duration, easing) {
+    if(angular.isNumber(value)) {
+      return this.scrollTo(this.scrollTop(), value, duration, easing);
+    }
+    var el = unwrap(this);
+    if(isDocument(el)) {
+      return $window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+    }
+    return el.scrollTop;
   };
 
-  for(var methodName in overloaders) {
-    proto[methodName] = (proto[methodName] ? overloadScrollPos(proto[methodName], overloaders[methodName]) : overloaders[methodName]);
-  }
 });
 
 
@@ -207,7 +193,7 @@ factory('spyAPI', function($rootScope, scrollContainerAPI) {
       for(i = 0; i < spies.length; i++) {
         spy = spies[i];
         pos = spy.getTargetPosition();
-        if (!pos) continue;
+        if (!pos) return;
 
         if(pos.top + spy.offset - containerOffset < 20 && (pos.top*-1 + containerOffset) < pos.height) {
           if(!toBeActive || toBeActive.top < pos.top) {
