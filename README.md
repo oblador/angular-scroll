@@ -25,7 +25,7 @@ This module extends the `angular.element` object with a few jQuery like function
 #### `.scrollTo( left, top [, duration [, easing ] ] )`
 Scrolls the element/window to the specified left/top position. If `duration` is specified the scrolling is animated for n milliseconds. If `easing` is ommited the animation will default to the `duScrollEasing` function.
 
-#### `.scrollTo( element [, duration [, easing ] ] )`
+#### `.scrollTo( element [, offset, [, duration [, easing ] ] ] )`
 Alias of `.scrollToElement`.
 
 #### `.scrollToElement( element [, offset, [, duration [, easing ] ] ] )`

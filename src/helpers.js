@@ -18,11 +18,14 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
   };
 
   proto.scrollTo = function(left, top, duration, easing) {
+    var aliasFn;
     if(angular.isElement(left)) {
-      return this.scrollToElement(left, 0, top, duration);
+      aliasFn = this.scrollToElement;
+    } else if(duration) {
+      aliasFn = this.scrollToAnimated;
     }
-    if(duration) {
-      return this.scrollToAnimated.apply(this, arguments);
+    if(aliasFn) {
+      return aliasFn.apply(this, arguments);
     }
     var el = unwrap(this);
     if(isDocument(el)) {
