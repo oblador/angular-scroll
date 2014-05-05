@@ -19,7 +19,7 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
 
   proto.scrollTo = function(left, top, duration, easing) {
     if(angular.isElement(left)) {
-      return this.scrollToElement(left, 0, top, duration);
+      return this.scrollToElement.apply(this, arguments);
     }
     if(duration) {
       return this.scrollToAnimated.apply(this, arguments);
