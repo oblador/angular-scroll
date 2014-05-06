@@ -48,8 +48,8 @@ gulp.task('test', function() {
 gulp.task('compress', function() {
   gulp.src(sources)
     .pipe(concat('angular-scroll.js', { newLine: '\n\n' }))
-    .pipe(gulp.dest('./'))
     .pipe(ngmin())
+    .pipe(gulp.dest('./'))
     .pipe(rename({
         suffix: '.min'
     }))
