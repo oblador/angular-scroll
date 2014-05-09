@@ -85,7 +85,17 @@ factory('spyAPI', function($rootScope, scrollContainerAPI) {
   };
 
   var getContextForSpy = function(spy) {
-    return getContextForScope(spy.$element.scope());
+    var context, contextId, scope = spy.$element.scope();
+    if(scope) {
+      return getContextForScope(scope);
+    }
+    //No scope, most likely destroyed
+    for(contextId in contexts) {
+      context = contexts[contextId];
+      if(context.spies.indexOf(spy) !== -1) {
+        return context;
+      }
+    }
   };
 
   var addSpy = function(spy) {
