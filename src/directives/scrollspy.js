@@ -52,6 +52,7 @@ directive('duScrollspy', function(spyAPI, $timeout) {
           spyAPI.removeSpy(spy);
         });
         $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
+        $scope.$on('$stateChangeSuccess', spy.flushTargetCache.bind(spy));
       }, 0);
     }
   };
