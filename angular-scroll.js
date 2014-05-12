@@ -252,7 +252,17 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI']).factory('spyA
       return contexts[defaultContextId];
     };
     var getContextForSpy = function (spy) {
-      return getContextForScope(spy.$element.scope());
+      var context, contextId, scope = spy.$element.scope();
+      if (scope) {
+        return getContextForScope(scope);
+      }
+      //No scope, most likely destroyed
+      for (contextId in contexts) {
+        context = contexts[contextId];
+        if (context.spies.indexOf(spy) !== -1) {
+          return context;
+        }
+      }
     };
     var addSpy = function (spy) {
       var context = getContextForSpy(spy);
@@ -436,6 +446,7 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI']).directive('duScrollspy
             spyAPI.removeSpy(spy);
           });
           $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
+          $scope.$on('$stateChangeSuccess', spy.flushTargetCache.bind(spy));
         }, 0);
       }
     };
