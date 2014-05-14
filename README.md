@@ -211,5 +211,11 @@ Building
 Tests
 -----
 
+### Unit tests
+
     $ npm test
- 
+
+### End to end tests
+
+    $ npm run update-webdriver
+    $ npm run protractor

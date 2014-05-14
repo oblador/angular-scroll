@@ -21,7 +21,9 @@
     "start": "http-server -p 8888",
     "test": "./node_modules/karma/bin/karma start test/karma.conf.js",
     "build": "gulp",
-    "test-single-run": "./node_modules/karma/bin/karma start test/karma.conf.js  --single-run"
+    "test-single-run": "./node_modules/karma/bin/karma start test/karma.conf.js  --single-run",
+    "update-webdriver": "node_modules/protractor/bin/webdriver-manager update",
+    "protractor": "node_modules/protractor/bin/protractor test/protractor-conf.js"
   },
   "author": "Durated (http://durated.com)",
   "contributors": [
@@ -42,6 +44,8 @@
     "gulp-concat": "~2.2.0",
     "gulp-rename": "~1.2.0",
     "gulp-clean": "~0.2.4",
-    "gulp-karma": "0.0.4"
+    "gulp-karma": "0.0.4",
+    "protractor": "~0.22.0",
+    "jasmine-given": "~2.6.0"
   }
 }
