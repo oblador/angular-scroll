@@ -45,7 +45,11 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
         deltaLeft = Math.round(left - startLeft),
         deltaTop = Math.round(top - startTop);
 
-    if(!deltaLeft && !deltaTop) return;
+    deferred = $q.defer();
+    if(!deltaLeft && !deltaTop) {
+      deferred.resolve()
+      return deferred.promise;
+    }
 
     var startTime = null;
     if(scrollAnimation) {
@@ -53,7 +57,6 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
       deferred.reject();
     }
     var el = this;
-    deferred = $q.defer();
 
     var animationStep = function(timestamp) {
       if (startTime === null) {
