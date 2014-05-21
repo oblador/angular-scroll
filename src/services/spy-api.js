@@ -1,5 +1,5 @@
 angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI']).
-factory('spyAPI', function($rootScope, scrollContainerAPI) {
+factory('spyAPI', function($rootScope, scrollContainerAPI, duScrollGreedy) {
   var createScrollHandler = function(context) {
     return function() {
       var container = context.container, 
@@ -32,7 +32,7 @@ factory('spyAPI', function($rootScope, scrollContainerAPI) {
       if(toBeActive) {
         toBeActive = toBeActive.spy;
       }
-      if(currentlyActive === toBeActive) return;
+      if(currentlyActive === toBeActive || (duScrollGreedy && !toBeActive)) return;
       if(currentlyActive) {
         currentlyActive.$element.removeClass('active');
         $rootScope.$broadcast('duScrollspy:becameInactive', currentlyActive.$element);

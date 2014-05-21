@@ -180,6 +180,13 @@ angular.module('myApp', ['duScroll']).value('duScrollEasing', invertedEasingFunc
 
 You can also pass a custom easing function as the fourth argument in `scrollTo`.
 
+### Greedy option
+Set the `duScrollGreedy` value to `true` if the elements you are observing are not wrapping the whole section you want to observe, but merely the first one in the section (such as headlines).
+
+```js
+angular.module('myApp', ['duScroll']).value('duScrollGreedy', true);
+```
+
 Events
 ------
 
