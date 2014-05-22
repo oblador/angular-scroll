@@ -79,6 +79,9 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
       }
     };
 
+    //Fix random mobile safari bug when scrolling to top by hitting status bar
+    el.scrollTo(startLeft, startTop);
+
     scrollAnimation = requestAnimation(animationStep);
     return deferred.promise;
   };
