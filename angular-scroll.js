@@ -13,7 +13,7 @@ angular.module('duScroll', [
   'duScroll.smoothScroll',
   'duScroll.scrollContainer',
   'duScroll.scrollHelpers'
-]).value('duScrollDuration', 350).value('duScrollEasing', duScrollDefaultEasing);
+]).value('duScrollDuration', 350).value('duScrollGreedy', false).value('duScrollEasing', duScrollDefaultEasing);
 angular.module('duScroll.scrollHelpers', []).run([
   '$window',
   '$q',
@@ -57,8 +57,6 @@ angular.module('duScroll.scrollHelpers', []).run([
         easing = duScrollEasing;
       }
       var startLeft = this.scrollLeft(), startTop = this.scrollTop(), deltaLeft = Math.round(left - startLeft), deltaTop = Math.round(top - startTop);
-      if (!deltaLeft && !deltaTop)
-        return;
       var startTime = null;
       if (scrollAnimation) {
         cancelAnimation(scrollAnimation);
@@ -66,6 +64,10 @@ angular.module('duScroll.scrollHelpers', []).run([
       }
       var el = this;
       deferred = $q.defer();
+      if (!deltaLeft && !deltaTop) {
+        deferred.resolve();
+        return deferred.promise;
+      }
       var animationStep = function (timestamp) {
         if (startTime === null) {
           startTime = timestamp;
@@ -80,6 +82,8 @@ angular.module('duScroll.scrollHelpers', []).run([
           deferred.resolve();
         }
       };
+      //Fix random mobile safari bug when scrolling to top by hitting status bar
+      el.scrollTo(startLeft, startTop);
       scrollAnimation = requestAnimation(animationStep);
       return deferred.promise;
     };
@@ -181,7 +185,8 @@ angular.module('duScroll.requestAnimation', ['duScroll.polyfill']).factory('requ
 angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI']).factory('spyAPI', [
   '$rootScope',
   'scrollContainerAPI',
-  function ($rootScope, scrollContainerAPI) {
+  'duScrollGreedy',
+  function ($rootScope, scrollContainerAPI, duScrollGreedy) {
     var createScrollHandler = function (context) {
       return function () {
         var container = context.container, containerEl = container[0], containerOffset = 0;
@@ -209,7 +214,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI']).factory('spyA
         if (toBeActive) {
           toBeActive = toBeActive.spy;
         }
-        if (currentlyActive === toBeActive)
+        if (currentlyActive === toBeActive || duScrollGreedy && !toBeActive)
           return;
         if (currentlyActive) {
           currentlyActive.$element.removeClass('active');
