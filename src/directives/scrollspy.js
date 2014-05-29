@@ -1,5 +1,5 @@
 angular.module('duScroll.scrollspy', ['duScroll.spyAPI']).
-directive('duScrollspy', function(spyAPI, $timeout) {
+directive('duScrollspy', function(spyAPI, $timeout, $rootScope) {
   var Spy = function(targetElementOrId, $element, offset) {
     if(angular.isElement(targetElementOrId)) {
       this.target = targetElementOrId;
@@ -52,7 +52,7 @@ directive('duScrollspy', function(spyAPI, $timeout) {
           spyAPI.removeSpy(spy);
         });
         $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
-        $scope.$on('$stateChangeSuccess', spy.flushTargetCache.bind(spy));
+        $rootScope.$on('$stateChangeSuccess', spy.flushTargetCache.bind(spy));
       }, 0);
     }
   };
