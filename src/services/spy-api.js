@@ -1,5 +1,5 @@
 angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI']).
-factory('spyAPI', function($rootScope, $timeout, scrollContainerAPI, duScrollGreedy) {
+factory('spyAPI', function($rootScope, scrollContainerAPI, duScrollGreedy) {
   var createScrollHandler = function(context) {
     return function() {
       var container = context.container, 
@@ -72,21 +72,6 @@ factory('spyAPI', function($rootScope, $timeout, scrollContainerAPI, duScrollGre
     delete contexts[id];
   };
 
-  var rebindContainer = function($scope, container) {
-    var context = getContextForScope($scope);
-    if(context.container) {
-      context.container.off('scroll', context.handler);
-    }
-    if(container) {
-      context.container = container;
-      context.handler = createScrollHandler(context);
-      container.on('scroll', context.handler);
-      $timeout(function() {
-        container.triggerHandler('scroll');
-      }, 0);
-    }
-  };
-
   var defaultContextId = createContext($rootScope);
 
   var getContextForScope = function(scope) {
@@ -113,10 +98,23 @@ factory('spyAPI', function($rootScope, $timeout, scrollContainerAPI, duScrollGre
     }
   };
 
+  var isElementInDocument = function(element) {
+    while (element.parentNode) {
+      element = element.parentNode;
+      if (element === document) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   var addSpy = function(spy) {
     var context = getContextForSpy(spy);
     getContextForSpy(spy).spies.push(spy);
-    if(!context.container) {
+    if (!context.container || !isElementInDocument(context.container)) {
+      if(context.container) {
+        context.container.off('scroll', context.handler);
+      }
       context.container = scrollContainerAPI.getContainer(spy.$element.scope());
       context.container.on('scroll', context.handler).triggerHandler('scroll');
     }
@@ -138,7 +136,6 @@ factory('spyAPI', function($rootScope, $timeout, scrollContainerAPI, duScrollGre
     removeSpy: removeSpy, 
     createContext: createContext,
     destroyContext: destroyContext,
-    rebindContainer: rebindContainer,
     getContextForScope: getContextForScope
   };
 });
