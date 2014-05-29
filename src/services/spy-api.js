@@ -1,5 +1,5 @@
 angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI']).
-factory('spyAPI', function($rootScope, scrollContainerAPI, duScrollGreedy) {
+factory('spyAPI', function($rootScope, $timeout, scrollContainerAPI, duScrollGreedy) {
   var createScrollHandler = function(context) {
     return function() {
       var container = context.container, 
@@ -72,6 +72,21 @@ factory('spyAPI', function($rootScope, scrollContainerAPI, duScrollGreedy) {
     delete contexts[id];
   };
 
+  var rebindContainer = function($scope, container) {
+    var context = getContextForScope($scope);
+    if(context.container) {
+      context.container.off('scroll', context.handler);
+    }
+    if(container) {
+      context.container = container;
+      context.handler = createScrollHandler(context);
+      container.on('scroll', context.handler);
+      $timeout(function() {
+        container.triggerHandler('scroll');
+      }, 0);
+    }
+  };
+
   var defaultContextId = createContext($rootScope);
 
   var getContextForScope = function(scope) {
@@ -123,6 +138,7 @@ factory('spyAPI', function($rootScope, scrollContainerAPI, duScrollGreedy) {
     removeSpy: removeSpy, 
     createContext: createContext,
     destroyContext: destroyContext,
+    rebindContainer: rebindContainer,
     getContextForScope: getContextForScope
   };
 });
