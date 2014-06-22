@@ -269,10 +269,22 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI']).factory('spyA
         }
       }
     };
+    var isElementInDocument = function (element) {
+      while (element.parentNode) {
+        element = element.parentNode;
+        if (element === document) {
+          return true;
+        }
+      }
+      return false;
+    };
     var addSpy = function (spy) {
       var context = getContextForSpy(spy);
       getContextForSpy(spy).spies.push(spy);
-      if (!context.container) {
+      if (!context.container || !isElementInDocument(context.container)) {
+        if (context.container) {
+          context.container.off('scroll', context.handler);
+        }
         context.container = scrollContainerAPI.getContainer(spy.$element.scope());
         context.container.on('scroll', context.handler).triggerHandler('scroll');
       }
@@ -404,7 +416,8 @@ angular.module('duScroll.scrollContainer', ['duScroll.scrollContainerAPI']).dire
 angular.module('duScroll.scrollspy', ['duScroll.spyAPI']).directive('duScrollspy', [
   'spyAPI',
   '$timeout',
-  function (spyAPI, $timeout) {
+  '$rootScope',
+  function (spyAPI, $timeout, $rootScope) {
     var Spy = function (targetElementOrId, $element, offset) {
       if (angular.isElement(targetElementOrId)) {
         this.target = targetElementOrId;
@@ -451,7 +464,7 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI']).directive('duScrollspy
             spyAPI.removeSpy(spy);
           });
           $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
-          $scope.$on('$stateChangeSuccess', spy.flushTargetCache.bind(spy));
+          $rootScope.$on('$stateChangeSuccess', spy.flushTargetCache.bind(spy));
         }, 0);
       }
     };
