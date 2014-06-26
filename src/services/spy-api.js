@@ -6,7 +6,7 @@ factory('spyAPI', function($rootScope, scrollContainerAPI, duScrollGreedy) {
           containerEl = container[0],
           containerOffset = 0;
 
-      if(containerEl instanceof HTMLElement) {
+      if (typeof HTMLElement !== 'undefined' && containerEl instanceof HTMLElement || containerEl.nodeType && containerEl.nodeType === containerEl.ELEMENT_NODE) {
         containerOffset = containerEl.getBoundingClientRect().top;
       }
 

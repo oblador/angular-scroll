@@ -190,7 +190,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI']).factory('spyA
     var createScrollHandler = function (context) {
       return function () {
         var container = context.container, containerEl = container[0], containerOffset = 0;
-        if (containerEl instanceof HTMLElement) {
+        if (typeof HTMLElement !== 'undefined' && containerEl instanceof HTMLElement || containerEl.nodeType && containerEl.nodeType === containerEl.ELEMENT_NODE) {
           containerOffset = containerEl.getBoundingClientRect().top;
         }
         var i, currentlyActive, toBeActive, spies, spy, pos;
