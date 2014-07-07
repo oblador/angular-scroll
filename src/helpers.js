@@ -4,7 +4,7 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
   this.$get = function() {
     return proto;
   };
-  
+
   var isDocument = function(el) {
     return (typeof HTMLDocument !== 'undefined' && el instanceof HTMLDocument) || (el.nodeType && el.nodeType === el.DOCUMENT_NODE);
   };
@@ -45,7 +45,6 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
         deltaLeft = Math.round(left - startLeft),
         deltaTop = Math.round(top - startTop);
 
-
     var startTime = null;
     if(scrollAnimation) {
       cancelAnimation(scrollAnimation);
@@ -59,6 +58,11 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
       return deferred.promise;
     }
 
+    var cancelOnScroll = function() {
+      cancelAnimation(scrollAnimation);
+      deferred.reject();
+    };
+
     var animationStep = function(timestamp) {
       if (startTime === null) {
         startTime = timestamp;
@@ -66,7 +70,7 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
 
       var progress = timestamp - startTime;
       var percent = (progress >= duration ? 1 : easing(progress/duration));
-      
+
       el.scrollTo(
         startLeft + Math.ceil(deltaLeft * percent),
         startTop + Math.ceil(deltaTop * percent)
@@ -74,6 +78,7 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
       if(percent < 1) {
         scrollAnimation = requestAnimation(animationStep);
       } else {
+        angular.element($window).unbind('mousewheel', cancelOnScroll);
         scrollAnimation = null;
         deferred.resolve();
       }
@@ -81,6 +86,7 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
 
     //Fix random mobile safari bug when scrolling to top by hitting status bar
     el.scrollTo(startLeft, startTop);
+    angular.element($window).bind('mousewheel', cancelOnScroll);
 
     scrollAnimation = requestAnimation(animationStep);
     return deferred.promise;
@@ -105,7 +111,7 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
         return $window.scrollX || document.documentElement.scrollLeft || document.body.scrollLeft;
       }
       return el.scrollLeft;
-    }, 
+    },
     scrollTop: function(value, duration, easing) {
       if(angular.isNumber(value)) {
         return this.scrollTo(this.scrollTop(), value, duration, easing);
@@ -118,7 +124,7 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
     }
   };
 
-  //Add duration and easing functionality to existing jQuery getter/setters 
+  //Add duration and easing functionality to existing jQuery getter/setters
   var overloadScrollPos = function(superFn, overloadFn) {
     return function(value, duration, easing) {
       if(duration) {
