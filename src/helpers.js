@@ -58,9 +58,13 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
       return deferred.promise;
     }
 
-    var cancelOnScroll = function() {
-      cancelAnimation(scrollAnimation);
-      deferred.reject();
+    var cancelScrollEvents = 'scroll mousedown mousewheel touchmove keydown',
+        cancelScrollFn = function(event) {
+      if (event.which > 0) {
+        angular.element($window).unbind(cancelScrollEvents);
+        cancelAnimation(scrollAnimation);
+        deferred.reject();
+      }
     };
 
     var animationStep = function(timestamp) {
@@ -78,7 +82,7 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
       if(percent < 1) {
         scrollAnimation = requestAnimation(animationStep);
       } else {
-        angular.element($window).unbind('mousewheel', cancelOnScroll);
+        angular.element($window).unbind(cancelScrollEvents, cancelScrollFn);
         scrollAnimation = null;
         deferred.resolve();
       }
@@ -86,7 +90,7 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
 
     //Fix random mobile safari bug when scrolling to top by hitting status bar
     el.scrollTo(startLeft, startTop);
-    angular.element($window).bind('mousewheel', cancelOnScroll);
+    angular.element($window).bind(cancelScrollEvents, cancelScrollFn);
 
     scrollAnimation = requestAnimation(animationStep);
     return deferred.promise;
