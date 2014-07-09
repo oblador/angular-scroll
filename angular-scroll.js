@@ -58,11 +58,19 @@ angular.module('duScroll.scrollHelpers', []).run([
       }
       var startLeft = this.scrollLeft(), startTop = this.scrollTop(), deltaLeft = Math.round(left - startLeft), deltaTop = Math.round(top - startTop);
       var startTime = null;
-      if (scrollAnimation) {
-        cancelAnimation(scrollAnimation);
-        deferred.reject();
-      }
       var el = this;
+      var cancelOnEvents = 'scroll mousedown mousewheel touchmove keydown';
+      var cancelScrollAnimation = function ($event) {
+        if (!$event || $event.which > 0) {
+          el.unbind(cancelOnEvents, cancelScrollAnimation);
+          cancelAnimation(scrollAnimation);
+          deferred.reject();
+          scrollAnimation = null;
+        }
+      };
+      if (scrollAnimation) {
+        cancelScrollAnimation();
+      }
       deferred = $q.defer();
       if (!deltaLeft && !deltaTop) {
         deferred.resolve();
@@ -78,12 +86,14 @@ angular.module('duScroll.scrollHelpers', []).run([
         if (percent < 1) {
           scrollAnimation = requestAnimation(animationStep);
         } else {
+          el.unbind(cancelOnEvents, cancelScrollAnimation);
           scrollAnimation = null;
           deferred.resolve();
         }
       };
       //Fix random mobile safari bug when scrolling to top by hitting status bar
       el.scrollTo(startLeft, startTop);
+      el.bind(cancelOnEvents, cancelScrollAnimation);
       scrollAnimation = requestAnimation(animationStep);
       return deferred.promise;
     };
@@ -117,7 +127,7 @@ angular.module('duScroll.scrollHelpers', []).run([
           return el.scrollTop;
         }
       };
-    //Add duration and easing functionality to existing jQuery getter/setters 
+    //Add duration and easing functionality to existing jQuery getter/setters
     var overloadScrollPos = function (superFn, overloadFn) {
       return function (value, duration, easing) {
         if (duration) {
