@@ -46,26 +46,27 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
         deltaTop = Math.round(top - startTop);
 
     var startTime = null;
-    if(scrollAnimation) {
-      cancelAnimation(scrollAnimation);
-      deferred.reject();
-    }
     var el = this;
+
+    var cancelOnEvents = 'scroll mousedown mousewheel touchmove keydown';
+    var cancelScrollAnimation = function($event) {
+      if (!$event || $event.which > 0) {
+        el.unbind(cancelOnEvents, cancelScrollAnimation);
+        cancelAnimation(scrollAnimation);
+        deferred.reject();
+        scrollAnimation = null;
+      }
+    };
+
+    if(scrollAnimation) {
+      cancelScrollAnimation();
+    }
     deferred = $q.defer();
 
     if(!deltaLeft && !deltaTop) {
       deferred.resolve();
       return deferred.promise;
     }
-
-    var cancelScrollEvents = 'scroll mousedown mousewheel touchmove keydown',
-        cancelScrollFn = function(event) {
-      if (event.which > 0) {
-        angular.element($window).unbind(cancelScrollEvents);
-        cancelAnimation(scrollAnimation);
-        deferred.reject();
-      }
-    };
 
     var animationStep = function(timestamp) {
       if (startTime === null) {
@@ -82,7 +83,7 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
       if(percent < 1) {
         scrollAnimation = requestAnimation(animationStep);
       } else {
-        angular.element($window).unbind(cancelScrollEvents, cancelScrollFn);
+        el.unbind(cancelOnEvents, cancelScrollAnimation);
         scrollAnimation = null;
         deferred.resolve();
       }
@@ -90,7 +91,8 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
 
     //Fix random mobile safari bug when scrolling to top by hitting status bar
     el.scrollTo(startLeft, startTop);
-    angular.element($window).bind(cancelScrollEvents, cancelScrollFn);
+
+    el.bind(cancelOnEvents, cancelScrollAnimation);
 
     scrollAnimation = requestAnimation(animationStep);
     return deferred.promise;
