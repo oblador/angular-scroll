@@ -1,9 +1,15 @@
+"use strict";
+/*global angular,HTMLDocument*/
+
 angular.module('duScroll.scrollHelpers', []).
 run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
   var proto = angular.element.prototype;
-  this.$get = function() {
-    return proto;
-  };
+  if (this) {
+    this.$get = function() {
+      return proto;
+    };
+  }
+
 
   var isDocument = function(el) {
     return (typeof HTMLDocument !== 'undefined' && el instanceof HTMLDocument) || (el.nodeType && el.nodeType === el.DOCUMENT_NODE);
@@ -100,6 +106,9 @@ run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
 
   proto.scrollToElement = function(target, offset, duration, easing) {
     var el = unwrap(this);
+    if (typeof offset === 'undefined') {
+      offset = 0;
+    }
     var top = this.scrollTop() + unwrap(target).getBoundingClientRect().top - offset;
     if(isElement(el)) {
       top -= el.getBoundingClientRect().top;

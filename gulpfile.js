@@ -30,7 +30,7 @@ gulp.task('clean', function() {
 
 gulp.task('lint', function() {
   gulp.src(sources)
-    .pipe(jshint())
+    .pipe(jshint({ browser: true }))
     .pipe(jshint.reporter('default'));
 });
 
