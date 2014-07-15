@@ -12,7 +12,6 @@ var duScrollDefaultEasing = function (x) {
 
 angular.module('duScroll', [
   'duScroll.scrollspy', 
-  'duScroll.requestAnimation', 
   'duScroll.smoothScroll', 
   'duScroll.scrollContainer', 
   'duScroll.spyContext',

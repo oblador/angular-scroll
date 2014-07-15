@@ -1,4 +1,4 @@
-angular.module('duScroll.scrollHelpers', [])
+angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
 .run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
   'use strict';
 
