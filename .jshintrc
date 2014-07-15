@@ -1,3 +1,5 @@
 {
-    "node": true
+  "predef": ["angular"],
+  "browser": true,
+  "strict": true
 }

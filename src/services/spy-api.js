@@ -1,5 +1,7 @@
-angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI']).
-factory('spyAPI', function($rootScope, scrollContainerAPI, duScrollGreedy) {
+angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
+.factory('spyAPI', function($rootScope, scrollContainerAPI, duScrollGreedy) {
+  'use strict';
+
   var createScrollHandler = function(context) {
     return function() {
       var container = context.container, 

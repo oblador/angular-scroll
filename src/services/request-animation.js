@@ -1,6 +1,8 @@
 //Adapted from https://gist.github.com/paulirish/1579671
-angular.module('duScroll.polyfill', []).
-factory('polyfill', function($window) {
+angular.module('duScroll.polyfill', [])
+.factory('polyfill', function($window) {
+  'use strict';
+
   var vendors = ['webkit', 'moz', 'o', 'ms'];
 
   return function(fnName, fallback) {
@@ -18,8 +20,10 @@ factory('polyfill', function($window) {
   };
 });
 
-angular.module('duScroll.requestAnimation', ['duScroll.polyfill']).
-factory('requestAnimation', function(polyfill, $timeout) {
+angular.module('duScroll.requestAnimation', ['duScroll.polyfill'])
+.factory('requestAnimation', function(polyfill, $timeout) {
+  'use strict';
+
   var lastTime = 0;
   var fallback = function(callback, element) {
     var currTime = new Date().getTime();
@@ -31,8 +35,10 @@ factory('requestAnimation', function(polyfill, $timeout) {
   };
   
   return polyfill('requestAnimationFrame', fallback);
-}).
-factory('cancelAnimation', function(polyfill, $timeout) {
+})
+.factory('cancelAnimation', function(polyfill, $timeout) {
+  'use strict';
+
   var fallback = function(promise) {
     $timeout.cancel(promise);
   };

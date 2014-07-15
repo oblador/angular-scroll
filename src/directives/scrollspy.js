@@ -1,5 +1,7 @@
-angular.module('duScroll.scrollspy', ['duScroll.spyAPI']).
-directive('duScrollspy', function(spyAPI, $timeout, $rootScope) {
+angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
+.directive('duScrollspy', function(spyAPI, $timeout, $rootScope) {
+  'use strict';
+
   var Spy = function(targetElementOrId, $element, offset) {
     if(angular.isElement(targetElementOrId)) {
       this.target = targetElementOrId;

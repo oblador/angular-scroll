@@ -1,5 +1,7 @@
-angular.module('duScroll.scrollContainerAPI', []).
-factory('scrollContainerAPI', function($document) {
+angular.module('duScroll.scrollContainerAPI', [])
+.factory('scrollContainerAPI', function($document) {
+  'use strict';
+
   var containers = {};
 
   var setContainer = function(scope, element) {

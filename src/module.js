@@ -2,6 +2,8 @@
   * x is a value between 0 and 1, indicating where in the animation you are.
   */
 var duScrollDefaultEasing = function (x) {
+  'use strict';
+
   if(x < 0.5) {
     return Math.pow(x*2, 2)/2;
   }

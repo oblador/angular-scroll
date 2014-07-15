@@ -1,5 +1,6 @@
-angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scrollContainerAPI']).
-directive('duSmoothScroll', function(duScrollDuration, scrollContainerAPI){
+angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scrollContainerAPI'])
+.directive('duSmoothScroll', function(duScrollDuration, scrollContainerAPI){
+  'use strict';
 
   return {
     link : function($scope, $element, $attr){
