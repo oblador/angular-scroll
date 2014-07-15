@@ -15,6 +15,7 @@ angular.module('duScroll', [
   'duScroll.requestAnimation', 
   'duScroll.smoothScroll', 
   'duScroll.scrollContainer', 
+  'duScroll.spyContext',
   'duScroll.scrollHelpers'
 ]).value('duScrollDuration', 350)
   .value('duScrollGreedy', false)
