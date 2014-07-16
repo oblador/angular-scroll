@@ -1,7 +1,7 @@
 angular-scroll
 ==============
 
-Only dependent on AngularJS (no jQuery). 6K minified or 1.1K gzipped.
+Only dependent on AngularJS (no jQuery). 8K minified or 2K gzipped.
 
 Example
 -------

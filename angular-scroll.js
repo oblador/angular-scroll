@@ -2,6 +2,7 @@
   * x is a value between 0 and 1, indicating where in the animation you are.
   */
 var duScrollDefaultEasing = function (x) {
+  'use strict';
   if (x < 0.5) {
     return Math.pow(x * 2, 2) / 2;
   }
@@ -9,22 +10,20 @@ var duScrollDefaultEasing = function (x) {
 };
 angular.module('duScroll', [
   'duScroll.scrollspy',
-  'duScroll.requestAnimation',
   'duScroll.smoothScroll',
   'duScroll.scrollContainer',
+  'duScroll.spyContext',
   'duScroll.scrollHelpers'
-]).value('duScrollDuration', 350).value('duScrollGreedy', false).value('duScrollEasing', duScrollDefaultEasing);
-angular.module('duScroll.scrollHelpers', []).run([
+]).value('duScrollDuration', 350).value('duScrollSpyWait', 100).value('duScrollGreedy', false).value('duScrollEasing', duScrollDefaultEasing);
+angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation']).run([
   '$window',
   '$q',
   'cancelAnimation',
   'requestAnimation',
   'duScrollEasing',
   function ($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
+    'use strict';
     var proto = angular.element.prototype;
-    this.$get = function () {
-      return proto;
-    };
     var isDocument = function (el) {
       return typeof HTMLDocument !== 'undefined' && el instanceof HTMLDocument || el.nodeType && el.nodeType === el.DOCUMENT_NODE;
     };
@@ -99,7 +98,7 @@ angular.module('duScroll.scrollHelpers', []).run([
     };
     proto.scrollToElement = function (target, offset, duration, easing) {
       var el = unwrap(this);
-      var top = this.scrollTop() + unwrap(target).getBoundingClientRect().top - offset;
+      var top = this.scrollTop() + unwrap(target).getBoundingClientRect().top - (offset || 0);
       if (isElement(el)) {
         top -= el.getBoundingClientRect().top;
       }
@@ -145,6 +144,7 @@ angular.module('duScroll.scrollHelpers', []).run([
 angular.module('duScroll.polyfill', []).factory('polyfill', [
   '$window',
   function ($window) {
+    'use strict';
     var vendors = [
         'webkit',
         'moz',
@@ -170,6 +170,7 @@ angular.module('duScroll.requestAnimation', ['duScroll.polyfill']).factory('requ
   'polyfill',
   '$timeout',
   function (polyfill, $timeout) {
+    'use strict';
     var lastTime = 0;
     var fallback = function (callback, element) {
       var currTime = new Date().getTime();
@@ -186,6 +187,7 @@ angular.module('duScroll.requestAnimation', ['duScroll.polyfill']).factory('requ
   'polyfill',
   '$timeout',
   function (polyfill, $timeout) {
+    'use strict';
     var fallback = function (promise) {
       $timeout.cancel(promise);
     };
@@ -194,11 +196,16 @@ angular.module('duScroll.requestAnimation', ['duScroll.polyfill']).factory('requ
 ]);
 angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI']).factory('spyAPI', [
   '$rootScope',
+  '$timeout',
   'scrollContainerAPI',
   'duScrollGreedy',
-  function ($rootScope, scrollContainerAPI, duScrollGreedy) {
+  'duScrollSpyWait',
+  function ($rootScope, $timeout, scrollContainerAPI, duScrollGreedy, duScrollSpyWait) {
+    'use strict';
     var createScrollHandler = function (context) {
-      return function () {
+      var timer = false, queued = false;
+      var handler = function () {
+        queued = false;
         var container = context.container, containerEl = container[0], containerOffset = 0;
         if (typeof HTMLElement !== 'undefined' && containerEl instanceof HTMLElement || containerEl.nodeType && containerEl.nodeType === containerEl.ELEMENT_NODE) {
           containerOffset = containerEl.getBoundingClientRect().top;
@@ -235,6 +242,23 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI']).factory('spyA
           $rootScope.$broadcast('duScrollspy:becameActive', toBeActive.$element);
         }
         context.currentlyActive = toBeActive;
+      };
+      if (!duScrollSpyWait) {
+        return handler;
+      }
+      //Debounce for potential performance savings
+      return function () {
+        if (!timer) {
+          handler();
+          timer = $timeout(function () {
+            timer = false;
+            if (queued) {
+              handler();
+            }
+          }, duScrollSpyWait);
+        } else {
+          queued = true;
+        }
       };
     };
     var contexts = {};
@@ -321,6 +345,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI']).factory('spyA
 angular.module('duScroll.scrollContainerAPI', []).factory('scrollContainerAPI', [
   '$document',
   function ($document) {
+    'use strict';
     var containers = {};
     var setContainer = function (scope, element) {
       var id = scope.$id;
@@ -361,6 +386,7 @@ angular.module('duScroll.smoothScroll', [
   'duScrollDuration',
   'scrollContainerAPI',
   function (duScrollDuration, scrollContainerAPI) {
+    'use strict';
     return {
       link: function ($scope, $element, $attr) {
         $element.on('click', function (e) {
@@ -385,6 +411,7 @@ angular.module('duScroll.smoothScroll', [
 angular.module('duScroll.spyContext', ['duScroll.spyAPI']).directive('duSpyContext', [
   'spyAPI',
   function (spyAPI) {
+    'use strict';
     return {
       restrict: 'A',
       scope: true,
@@ -401,6 +428,7 @@ angular.module('duScroll.spyContext', ['duScroll.spyAPI']).directive('duSpyConte
 angular.module('duScroll.scrollContainer', ['duScroll.scrollContainerAPI']).directive('duScrollContainer', [
   'scrollContainerAPI',
   function (scrollContainerAPI) {
+    'use strict';
     return {
       restrict: 'A',
       scope: true,
@@ -428,6 +456,7 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI']).directive('duScrollspy
   '$timeout',
   '$rootScope',
   function (spyAPI, $timeout, $rootScope) {
+    'use strict';
     var Spy = function (targetElementOrId, $element, offset) {
       if (angular.isElement(targetElementOrId)) {
         this.target = targetElementOrId;
