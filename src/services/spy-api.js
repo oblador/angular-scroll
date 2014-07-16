@@ -1,9 +1,11 @@
 angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
-.factory('spyAPI', function($rootScope, scrollContainerAPI, duScrollGreedy) {
+.factory('spyAPI', function($rootScope, $timeout, scrollContainerAPI, duScrollGreedy, duScrollSpyWait) {
   'use strict';
 
   var createScrollHandler = function(context) {
-    return function() {
+    var timer = false, queued = false;
+    var handler = function() {
+      queued = false;
       var container = context.container, 
           containerEl = container[0],
           containerOffset = 0;
@@ -44,6 +46,25 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
         $rootScope.$broadcast('duScrollspy:becameActive', toBeActive.$element);
       }
       context.currentlyActive = toBeActive;
+    };
+    
+    if(!duScrollSpyWait) {
+      return handler;
+    }
+
+    //Debounce for potential performance savings
+    return function() {
+      if(!timer) {
+        handler();
+        timer = $timeout(function() {
+          timer = false;
+          if(queued) {
+            handler();
+          }
+        }, duScrollSpyWait);
+      } else {
+        queued = true;
+      }
     };
   };
 
