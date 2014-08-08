@@ -12,7 +12,7 @@ angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scr
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
-        var offset = duScrollOffset ? duScrollOffset : ($attr.offset ? parseInt($attr.offset, 10) : 0);
+        var offset = duScrollOffset ? (angular.isFunction(duScrollOffset) ? duScrollOffset() : duScrollOffset) : ($attr.offset ? parseInt($attr.offset, 10) : 0);
         var duration = $attr.duration ? parseInt($attr.duration, 10) : duScrollDuration;
         var container = scrollContainerAPI.getContainer($scope);
 
