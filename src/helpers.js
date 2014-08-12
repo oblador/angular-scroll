@@ -34,8 +34,8 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     el.scrollTop = top;
   };
 
-  var scrollAnimation, deferred;
   proto.scrollToAnimated = function(left, top, duration, easing) {
+    var scrollAnimation, deferred;
     if(duration && !easing) {
       easing = duScrollEasing;
     }
