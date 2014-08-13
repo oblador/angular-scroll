@@ -1,10 +1,11 @@
 var gulp   = require('gulp');
-var clean  = require('gulp-clean');
+var clean  = require('gulp-rimraf');
 var jshint = require('gulp-jshint');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
-var ngmin  = require('gulp-ngmin');
-var rename = require('gulp-rename');
+var ngmin  = require('gulp-ng-annotate');
+var sourcemaps = require('gulp-sourcemaps');
+
 var karma = require('gulp-karma');
 var karmaConfPath = './test/karma.conf.js';
 var karmaConf = require(karmaConfPath);
@@ -46,15 +47,20 @@ gulp.task('test', function() {
 });
 
 gulp.task('compress', function() {
+  //Development version
   gulp.src(sources)
     .pipe(concat('angular-scroll.js', { newLine: '\n\n' }))
     .pipe(ngmin())
-    .pipe(gulp.dest('./'))
-    .pipe(rename({
-        suffix: '.min'
-    }))
-    .pipe(uglify({ outSourceMap: true }))
-    .pipe(gulp.dest('./'))
+    .pipe(gulp.dest('./'));
+
+  //Minified version
+  gulp.src(sources)
+    .pipe(sourcemaps.init())
+      .pipe(concat('angular-scroll.min.js', { newLine: '\n\n' }))
+      .pipe(ngmin())
+      .pipe(uglify())
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('./'));
 });
 
 gulp.task('default', ['lint', 'test', 'clean', 'compress']);
