@@ -55,7 +55,7 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
         });
         $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
         $rootScope.$on('$stateChangeSuccess', spy.flushTargetCache.bind(spy));
-      }, 0);
+      }, 0, false);
     }
   };
 });
