@@ -6,7 +6,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
     var timer = false, queued = false;
     var handler = function() {
       queued = false;
-      var container = context.container, 
+      var container = context.container,
           containerEl = container[0],
           containerOffset = 0;
 
@@ -47,7 +47,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
       }
       context.currentlyActive = toBeActive;
     };
-    
+
     if(!duScrollSpyWait) {
       return handler;
     }
@@ -61,7 +61,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
           if(queued) {
             handler();
           }
-        }, duScrollSpyWait);
+        }, duScrollSpyWait, false);
       } else {
         queued = true;
       }
@@ -75,10 +75,10 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
     var context = {
       spies: []
     };
-    
+
     context.handler = createScrollHandler(context);
     contexts[id] = context;
-    
+
     $scope.$on('$destroy', function() {
       destroyContext($scope);
     });
@@ -156,7 +156,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
 
   return {
     addSpy: addSpy,
-    removeSpy: removeSpy, 
+    removeSpy: removeSpy,
     createContext: createContext,
     destroyContext: destroyContext,
     getContextForScope: getContextForScope
