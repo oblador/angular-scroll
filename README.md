@@ -72,7 +72,7 @@ Provides smooth anchor scrolling.
 ```
 
 ### `du-scrollspy`
-Observes wether the target element is at the top of the viewport (or container) and adds an `active` class if so. Takes optional `offset` and `duration` attributes which is passed on to `.scrollTo`,
+Observes whether the target element is at the top of the viewport (or container) and adds an `active` class if so. Takes optional `offset` and `duration` attributes which is passed on to `.scrollTo`,
 
 ```html
 <a href="#anchor" du-scrollspy>Am i active?</a>
