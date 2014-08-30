@@ -100,10 +100,12 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
   proto.scrollToElement = function(target, offset, duration, easing) {
     var el = unwrap(this);
     var top = this.scrollTop() + unwrap(target).getBoundingClientRect().top - (offset || 0);
+    var left = this.scrollLeft() + unwrap(target).getBoundingClientRect().left - (offset || 0);
     if(isElement(el)) {
       top -= el.getBoundingClientRect().top;
+      left -= el.getBoundingClientRect().left;
     }
-    return this.scrollTo(0, top, duration, easing);
+    return this.scrollTo(left, top, duration, easing);
   };
 
   var overloaders = {
