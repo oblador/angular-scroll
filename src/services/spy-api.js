@@ -133,7 +133,8 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
 
   var addSpy = function(spy) {
     var context = getContextForSpy(spy);
-    getContextForSpy(spy).spies.push(spy);
+    if (!context) return;
+    context.spies.push(spy);
     if (!context.container || !isElementInDocument(context.container)) {
       if(context.container) {
         context.container.off('scroll', context.handler);
