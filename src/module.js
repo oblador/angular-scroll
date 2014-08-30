@@ -19,4 +19,5 @@ angular.module('duScroll', [
 ]).value('duScrollDuration', 350)
   .value('duScrollSpyWait', 100)
   .value('duScrollGreedy', false)
-  .value('duScrollEasing', duScrollDefaultEasing);
+  .value('duScrollEasing', duScrollDefaultEasing)
+  .value('duScrollOffset', null);
