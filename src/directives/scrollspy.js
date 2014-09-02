@@ -1,5 +1,5 @@
 angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
-.directive('duScrollspy', function(spyAPI, $timeout, $rootScope) {
+.directive('duScrollspy', function(spyAPI, duScrollOffset, $timeout, $rootScope) {
   'use strict';
 
   var Spy = function(targetElementOrId, $element, offset) {
@@ -47,7 +47,7 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
       // Run this in the next execution loop so that the scroll context has a chance
       // to initialize
       $timeout(function() {
-        var spy = new Spy(targetId, $element, -($attr.offset ? parseInt($attr.offset, 10) : 0));
+        var spy = new Spy(targetId, $element, -($attr.offset ? parseInt($attr.offset, 10) : duScrollOffset));
         spyAPI.addSpy(spy);
 
         $scope.$on('$destroy', function() {

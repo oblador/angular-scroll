@@ -1,5 +1,5 @@
 angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
-.run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing) {
+.run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing, duScrollDuration, duScrollOffset) {
   'use strict';
 
   var proto = angular.element.prototype;
@@ -99,7 +99,10 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
 
   proto.scrollToElement = function(target, offset, duration, easing) {
     var el = unwrap(this);
-    var top = this.scrollTop() + unwrap(target).getBoundingClientRect().top - (offset || 0);
+    if(!angular.isNumber(offset) || isNaN(offset)) {
+      offset = duScrollOffset;
+    }
+    var top = this.scrollTop() + unwrap(target).getBoundingClientRect().top - offset;
     if(isElement(el)) {
       top -= el.getBoundingClientRect().top;
     }
@@ -127,6 +130,18 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
       }
       return el.scrollTop;
     }
+  };
+
+  proto.scrollToElementAnimated = function(target, offset, duration, easing) {
+    return this.scrollToElement(target, offset, duration || duScrollDuration, easing);
+  };
+
+  proto.scrollTopAnimated = function(top, duration, easing) {
+    return this.scrollTop(top, duration || duScrollDuration, easing);
+  };
+
+  proto.scrollLeftAnimated = function(left, duration, easing) {
+    return this.scrollLeft(left, duration || duScrollDuration, easing);
   };
 
   //Add duration and easing functionality to existing jQuery getter/setters

@@ -77,9 +77,9 @@
 <div class="wrap" ng-controller="MyCtrl">
   <nav>
     <ul>
-      <li><a href="#section-1" du-smooth-scroll du-scrollspy offset="30">Section 1</a></li>
-      <li><a href="#section-2" du-smooth-scroll du-scrollspy offset="30">Section 2</a></li>
-      <li><a href="#section-3" du-smooth-scroll du-scrollspy offset="30">Section 3</a></li>
+      <li><a href="#section-1" du-smooth-scroll du-scrollspy>Section 1</a></li>
+      <li><a href="#section-2" du-smooth-scroll du-scrollspy>Section 2</a></li>
+      <li><a href="#section-3" du-smooth-scroll du-scrollspy>Section 3</a></li>
       <li><a href="http://github.com/durated/angular-scroll/">Project on Github</a></li>
     </ul>
   </nav>
@@ -122,16 +122,16 @@
 angular.module('myApp', ['duScroll']).
   controller('MyCtrl', function($scope, $document){
     $scope.toTheTop = function() {
-      $document.scrollTop(0, 5000).then(function() { 
+      $document.scrollTopAnimated(0).then(function() { 
         console && console.log('You just scrolled to the top!');
       });
     }
     var section2 = angular.element(document.getElementById('section-2'));
     $scope.toSection2 = function() {
-      $document.scrollTo(section2, 0, 1000);
+      $document.scrollToElementAnimated(section2);
     }
   }
-);
+).value('duScrollOffset', 30);
 </script>
 </body>
 </html>
