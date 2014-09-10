@@ -64,7 +64,7 @@ describe('service', function() {
       expect(spyAPI.getContextForScope(childScope)).toBe(spyAPI.getContextForScope(testScope));
     }]));
 
-    it('should return default context when when destroyed', inject(['$rootScope', 'spyAPI' ,function($rootScope, spyAPI) {
+    it('should return default context when destroyed', inject(['$rootScope', 'spyAPI' ,function($rootScope, spyAPI) {
       var testScope = $rootScope.$new();
       spyAPI.createContext(testScope);
 
