@@ -24,7 +24,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
         pos = spy.getTargetPosition();
         if (!pos) continue;
 
-        if(pos.top + spy.offset - containerOffset < 20 && (pos.top*-1 + containerOffset) < pos.height) {
+        if(pos.top + spy.offset - containerOffset < 20 && (duScrollGreedy || pos.top*-1 + containerOffset) < pos.height) {
           if(!toBeActive || toBeActive.top < pos.top) {
             toBeActive = {
               top: pos.top,
@@ -36,7 +36,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
       if(toBeActive) {
         toBeActive = toBeActive.spy;
       }
-      if(currentlyActive === toBeActive || (duScrollGreedy && !toBeActive)) return;
+      if(currentlyActive === toBeActive) return;
       if(currentlyActive) {
         currentlyActive.$element.removeClass('active');
         $rootScope.$broadcast('duScrollspy:becameInactive', currentlyActive.$element);
