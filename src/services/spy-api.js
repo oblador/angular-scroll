@@ -25,7 +25,18 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
 
       // If the bottom of the container/page is reached, activate the last spy.
       if ((inContainer && containerBottomReached) || (!inContainer && pageBottomReached)) {
-        spy = spies[spies.length-1];
+        var getSpyOnBottom = function() {
+          var posmax = -Infinity, imax, pos;
+          for (i = 0; i < spies.length; ++i) {
+            pos = spies[i].getTargetPosition().bottom;
+            if (pos > posmax) {
+              posmax = pos;
+              imax = i;
+            }
+          }
+          return spies[imax];
+        };
+        spy = getSpyOnBottom();
         toBeActive = {
           spy: spy,
           top: spy.getTargetPosition()
