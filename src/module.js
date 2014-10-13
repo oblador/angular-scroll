@@ -26,4 +26,6 @@ angular.module('duScroll', [
   //Default offset for smoothScroll directive
   .value('duScrollOffset', 0)
   //Default easing function for scroll animation
-  .value('duScrollEasing', duScrollDefaultEasing);
+  .value('duScrollEasing', duScrollDefaultEasing)
+  //Whether or not to activate the last scrollspy, when page/container bottom is reached
+  .value('duScrollActivateBottomSpy', true);

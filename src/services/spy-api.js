@@ -1,5 +1,5 @@
 angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
-.factory('spyAPI', function($rootScope, $timeout, $window, $document, scrollContainerAPI, duScrollGreedy, duScrollSpyWait) {
+.factory('spyAPI', function($rootScope, $timeout, $window, $document, scrollContainerAPI, duScrollGreedy, duScrollSpyWait, duScrollActivateBottomSpy) {
   'use strict';
 
   var createScrollHandler = function(context) {
@@ -24,7 +24,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
       var pageBottomReached = ($window.scrollY + $window.innerHeight >= $document[0].body.scrollHeight);
 
       // If the bottom of the container/page is reached, activate the last spy.
-      if ((inContainer && containerBottomReached) || (!inContainer && pageBottomReached)) {
+      if (duScrollActivateBottomSpy && ((inContainer && containerBottomReached) || (!inContainer && pageBottomReached))) {
         var getSpyOnBottom = function() {
           var posmax = -Infinity, imax, pos;
           for (i = 0; i < spies.length; ++i) {
@@ -176,6 +176,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
     if(i !== -1) {
       context.spies.splice(i, 1);
     }
+    spy.$element = null;
   };
 
   return {
