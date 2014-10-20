@@ -5,7 +5,7 @@ Only dependent on AngularJS (no jQuery). 8K minified or 2K gzipped.
 
 Example
 -------
-Check out [the live demo](http://durated.github.io/angular-scroll/) or the [source code](https://github.com/durated/angular-scroll/blob/master/example/index.html).
+Check out [the live demo](http://oblador.github.io/angular-scroll/) or the [source code](https://github.com/oblador/angular-scroll/blob/master/example/index.html).
 
 Install
 -------
@@ -13,7 +13,7 @@ With bower:
 
     $ bower install angular-scroll
 
-Or download the [production version](https://raw.github.com/durated/angular-scroll/master/angular-scroll.min.js) or the [development version](https://raw.github.com/durated/angular-scroll/master/angular-scroll.js). 
+Or download the [production version](https://raw.github.com/oblador/angular-scroll/master/angular-scroll.min.js) or the [development version](https://raw.github.com/oblador/angular-scroll/master/angular-scroll.js). 
 
 Don't forget to add `duScroll` to your module dependencies. 
 
@@ -142,7 +142,7 @@ If your links lie outside of the scrollable element, wrap them with the `du-scro
 ```
 
 ### [All in together now](http://www.youtube.com/watch?v=cx4KtTezEFg&feature=kp)
-The directives play well together, try [the demo](http://durated.github.io/angular-scroll/container.html) or inspect its [source code](https://github.com/durated/angular-scroll/blob/master/example/container.html).
+The directives play well together, try [the demo](http://oblador.github.io/angular-scroll/container.html) or inspect its [source code](https://github.com/oblador/angular-scroll/blob/master/example/container.html).
 
 ```html
 <ul du-spy-context du-scroll-container="scroll-container">

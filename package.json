@@ -12,10 +12,10 @@
   "main": "angular-scroll.min.js",
   "repository": {
     "type": "git",
-    "url": "git://git@github.com:durated/angular-scroll.git"
+    "url": "git://git@github.com:oblador/angular-scroll.git"
   },
   "bugs": {
-    "url": "https://github.com/durated/angular-scroll/issues"
+    "url": "https://github.com/oblador/angular-scroll/issues"
   },
   "scripts": {
     "start": "http-server -p 8888",
@@ -25,11 +25,7 @@
     "update-webdriver": "node_modules/protractor/bin/webdriver-manager update",
     "protractor": "node_modules/protractor/bin/protractor test/protractor-conf.js"
   },
-  "author": "Durated (http://durated.com)",
-  "contributors": [
-    "Joel Arvidsson",
-    "Joachim Karlsson"
-  ],
+  "author": "Joel Arvidsson",
   "license": "MIT",
   "devDependencies": {
     "gulp": "~3.8.0",
