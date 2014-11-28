@@ -20,7 +20,7 @@ Don't forget to add `duScroll` to your module dependencies.
 `angular.element` Scroll API
 ----------------------------
 
-This module extends the `angular.element` object with a few jQuery like functions. Note that `$document` is an `angular.element`, for usage example see below.
+This module extends the `angular.element` object with a few jQuery like functions. Note that `$document` is an `angular.element`, for usage example see below. In case of name collisions existing jQuery or jqlite functions will be preserved, just use the prefixed version: ie `.duScrollTo()` instead of `.scrollTo()`.
 
 #### `.scrollTo( left, top [, duration [, easing ] ] )`
 Scrolls the element/window to the specified left/top position. If `duration` is specified the scrolling is animated for n milliseconds. If `easing` is ommited the animation will default to the `duScrollEasing` function.

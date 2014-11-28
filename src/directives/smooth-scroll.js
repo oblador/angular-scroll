@@ -17,7 +17,7 @@ angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scr
         var duration  = $attr.duration ? parseInt($attr.duration, 10) : duScrollDuration;
         var container = scrollContainerAPI.getContainer($scope);
 
-        container.scrollToElement(
+        container.duScrollToElement(
           angular.element(target), 
           isNaN(offset) ? 0 : offset, 
           isNaN(duration) ? 0 : duration
