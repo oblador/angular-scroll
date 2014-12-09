@@ -51,7 +51,7 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     var aliasFn;
     if(angular.isElement(left)) {
       aliasFn = this.scrollToElement;
-    } else if(duration) {
+    } else if(duration || duration === 0) {
       aliasFn = this.scrollToAnimated;
     }
     if(aliasFn) {
@@ -395,6 +395,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
     if(i !== -1) {
       context.spies.splice(i, 1);
     }
+		spy.$element = null;
   };
 
   return {
