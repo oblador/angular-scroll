@@ -20,7 +20,7 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     var aliasFn;
     if(angular.isElement(left)) {
       aliasFn = this.duScrollToElement;
-    } else if(duration) {
+    } else if(duration || duration === 0) {
       aliasFn = this.duScrollToAnimated;
     }
     if(aliasFn) {
