@@ -16,11 +16,15 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     return isElement(el) || isDocument(el) ? el : el[0];
   };
 
+  var validDuration = function(duration) {
+    return duration || duration === 0;
+  };
+
   proto.duScrollTo = function(left, top, duration, easing) {
     var aliasFn;
     if(angular.isElement(left)) {
       aliasFn = this.duScrollToElement;
-    } else if(duration) {
+    } else if(validDuration(duration)) {
       aliasFn = this.duScrollToAnimated;
     }
     if(aliasFn) {
@@ -36,7 +40,7 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
 
   var scrollAnimation, deferred;
   proto.duScrollToAnimated = function(left, top, duration, easing) {
-    if(duration && !easing) {
+    if(validDuration(duration) && !easing) {
       easing = duScrollEasing;
     }
     var startLeft = this.duScrollLeft(),
@@ -131,15 +135,15 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
   };
 
   proto.duScrollToElementAnimated = function(target, offset, duration, easing) {
-    return this.duScrollToElement(target, offset, duration || duScrollDuration, easing);
+    return this.duScrollToElement(target, offset, validDuration(duration) ? duration : duScrollDuration, easing);
   };
 
   proto.duScrollTopAnimated = function(top, duration, easing) {
-    return this.duScrollTop(top, duration || duScrollDuration, easing);
+    return this.duScrollTop(top, validDuration(duration) ? duration : duScrollDuration, easing);
   };
 
   proto.duScrollLeftAnimated = function(left, duration, easing) {
-    return this.duScrollLeft(left, duration || duScrollDuration, easing);
+    return this.duScrollLeft(left, validDuration(duration) ? duration : duScrollDuration, easing);
   };
 
   angular.forEach(proto, function(fn, key) {
