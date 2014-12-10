@@ -38,7 +38,6 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     el.scrollTop = top;
   };
 
-  var scrollAnimation, deferred;
   proto.duScrollToAnimated = function(left, top, duration, easing) {
     if(validDuration(duration) && !easing) {
       easing = duScrollEasing;
@@ -55,20 +54,20 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     var cancelScrollAnimation = function($event) {
       if (!$event || $event.which > 0) {
         el.unbind(cancelOnEvents, cancelScrollAnimation);
-        cancelAnimation(scrollAnimation);
-        deferred.reject();
-        scrollAnimation = null;
+        cancelAnimation(el.duScrollAnimation);
+        el.duScrollAnimationDeferred.reject();
+        el.duScrollAnimation = null;
       }
     };
 
-    if(scrollAnimation) {
+    if(el.duScrollAnimation) {
       cancelScrollAnimation();
     }
-    deferred = $q.defer();
+    el.duScrollAnimationDeferred = $q.defer();
 
     if(!deltaLeft && !deltaTop) {
-      deferred.resolve();
-      return deferred.promise;
+      el.duScrollAnimationDeferred.resolve();
+      return el.duScrollAnimationDeferred.promise;
     }
 
     var animationStep = function(timestamp) {
@@ -84,11 +83,11 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
         startTop + Math.ceil(deltaTop * percent)
       );
       if(percent < 1) {
-        scrollAnimation = requestAnimation(animationStep);
+        el.duScrollAnimation = requestAnimation(animationStep);
       } else {
         el.unbind(cancelOnEvents, cancelScrollAnimation);
-        scrollAnimation = null;
-        deferred.resolve();
+        el.duScrollAnimation = null;
+        el.duScrollAnimationDeferred.resolve();
       }
     };
 
@@ -97,8 +96,8 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
 
     el.bind(cancelOnEvents, cancelScrollAnimation);
 
-    scrollAnimation = requestAnimation(animationStep);
-    return deferred.promise;
+    el.duScrollAnimation = requestAnimation(animationStep);
+    return el.duScrollAnimationDeferred.promise;
   };
 
   proto.duScrollToElement = function(target, offset, duration, easing) {
