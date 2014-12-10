@@ -33,7 +33,7 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
 .run(["$window", "$q", "cancelAnimation", "requestAnimation", "duScrollEasing", "duScrollDuration", "duScrollOffset", function($window, $q, cancelAnimation, requestAnimation, duScrollEasing, duScrollDuration, duScrollOffset) {
   'use strict';
 
-  var proto = angular.element.prototype;
+  var proto = {};
 
   var isDocument = function(el) {
     return (typeof HTMLDocument !== 'undefined' && el instanceof HTMLDocument) || (el.nodeType && el.nodeType === el.DOCUMENT_NODE);
@@ -47,12 +47,16 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     return isElement(el) || isDocument(el) ? el : el[0];
   };
 
-  proto.scrollTo = function(left, top, duration, easing) {
+  var validDuration = function(duration) {
+    return duration || duration === 0;
+  };
+
+  proto.duScrollTo = function(left, top, duration, easing) {
     var aliasFn;
     if(angular.isElement(left)) {
-      aliasFn = this.scrollToElement;
-    } else if(duration) {
-      aliasFn = this.scrollToAnimated;
+      aliasFn = this.duScrollToElement;
+    } else if(validDuration(duration)) {
+      aliasFn = this.duScrollToAnimated;
     }
     if(aliasFn) {
       return aliasFn.apply(this, arguments);
@@ -65,13 +69,12 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     el.scrollTop = top;
   };
 
-  var scrollAnimation, deferred;
-  proto.scrollToAnimated = function(left, top, duration, easing) {
-    if(duration && !easing) {
+  proto.duScrollToAnimated = function(left, top, duration, easing) {
+    if(validDuration(duration) && !easing) {
       easing = duScrollEasing;
     }
-    var startLeft = this.scrollLeft(),
-        startTop = this.scrollTop(),
+    var startLeft = this.duScrollLeft(),
+        startTop = this.duScrollTop(),
         deltaLeft = Math.round(left - startLeft),
         deltaTop = Math.round(top - startTop);
 
@@ -82,20 +85,20 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     var cancelScrollAnimation = function($event) {
       if (!$event || $event.which > 0) {
         el.unbind(cancelOnEvents, cancelScrollAnimation);
-        cancelAnimation(scrollAnimation);
-        deferred.reject();
-        scrollAnimation = null;
+        cancelAnimation(el.duScrollAnimation);
+        el.duScrollAnimationDeferred.reject();
+        el.duScrollAnimation = null;
       }
     };
 
-    if(scrollAnimation) {
+    if(el.duScrollAnimation) {
       cancelScrollAnimation();
     }
-    deferred = $q.defer();
+    el.duScrollAnimationDeferred = $q.defer();
 
     if(!deltaLeft && !deltaTop) {
-      deferred.resolve();
-      return deferred.promise;
+      el.duScrollAnimationDeferred.resolve();
+      return el.duScrollAnimationDeferred.promise;
     }
 
     var animationStep = function(timestamp) {
@@ -111,83 +114,78 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
         startTop + Math.ceil(deltaTop * percent)
       );
       if(percent < 1) {
-        scrollAnimation = requestAnimation(animationStep);
+        el.duScrollAnimation = requestAnimation(animationStep);
       } else {
         el.unbind(cancelOnEvents, cancelScrollAnimation);
-        scrollAnimation = null;
-        deferred.resolve();
+        el.duScrollAnimation = null;
+        el.duScrollAnimationDeferred.resolve();
       }
     };
 
     //Fix random mobile safari bug when scrolling to top by hitting status bar
-    el.scrollTo(startLeft, startTop);
+    el.duScrollTo(startLeft, startTop);
 
     el.bind(cancelOnEvents, cancelScrollAnimation);
 
-    scrollAnimation = requestAnimation(animationStep);
-    return deferred.promise;
+    el.duScrollAnimation = requestAnimation(animationStep);
+    return el.duScrollAnimationDeferred.promise;
   };
 
-  proto.scrollToElement = function(target, offset, duration, easing) {
+  proto.duScrollToElement = function(target, offset, duration, easing) {
     var el = unwrap(this);
     if(!angular.isNumber(offset) || isNaN(offset)) {
       offset = duScrollOffset;
     }
-    var top = this.scrollTop() + unwrap(target).getBoundingClientRect().top - offset;
+    var top = this.duScrollTop() + unwrap(target).getBoundingClientRect().top - offset;
     if(isElement(el)) {
       top -= el.getBoundingClientRect().top;
     }
-    return this.scrollTo(0, top, duration, easing);
+    return this.duScrollTo(0, top, duration, easing);
   };
 
-  var overloaders = {
-    scrollLeft: function(value, duration, easing) {
-      if(angular.isNumber(value)) {
-        return this.scrollTo(value, this.scrollTop(), duration, easing);
-      }
-      var el = unwrap(this);
-      if(isDocument(el)) {
-        return $window.scrollX || document.documentElement.scrollLeft || document.body.scrollLeft;
-      }
-      return el.scrollLeft;
-    },
-    scrollTop: function(value, duration, easing) {
-      if(angular.isNumber(value)) {
-        return this.scrollTo(this.scrollTop(), value, duration, easing);
-      }
-      var el = unwrap(this);
-      if(isDocument(el)) {
-        return $window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
-      }
-      return el.scrollTop;
+  proto.duScrollLeft = function(value, duration, easing) {
+    if(angular.isNumber(value)) {
+      return this.duScrollTo(value, this.duScrollTop(), duration, easing);
     }
+    var el = unwrap(this);
+    if(isDocument(el)) {
+      return $window.scrollX || document.documentElement.scrollLeft || document.body.scrollLeft;
+    }
+    return el.scrollLeft;
+  };
+  proto.duScrollTop = function(value, duration, easing) {
+    if(angular.isNumber(value)) {
+      return this.duScrollTo(this.duScrollLeft(), value, duration, easing);
+    }
+    var el = unwrap(this);
+    if(isDocument(el)) {
+      return $window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+    }
+    return el.scrollTop;
   };
 
-  proto.scrollToElementAnimated = function(target, offset, duration, easing) {
-    return this.scrollToElement(target, offset, duration || duScrollDuration, easing);
+  proto.duScrollToElementAnimated = function(target, offset, duration, easing) {
+    return this.duScrollToElement(target, offset, validDuration(duration) ? duration : duScrollDuration, easing);
   };
 
-  proto.scrollTopAnimated = function(top, duration, easing) {
-    return this.scrollTop(top, duration || duScrollDuration, easing);
+  proto.duScrollTopAnimated = function(top, duration, easing) {
+    return this.duScrollTop(top, validDuration(duration) ? duration : duScrollDuration, easing);
   };
 
-  proto.scrollLeftAnimated = function(left, duration, easing) {
-    return this.scrollLeft(left, duration || duScrollDuration, easing);
+  proto.duScrollLeftAnimated = function(left, duration, easing) {
+    return this.duScrollLeft(left, validDuration(duration) ? duration : duScrollDuration, easing);
   };
 
-  //Add duration and easing functionality to existing jQuery getter/setters
-  var overloadScrollPos = function(superFn, overloadFn) {
-    return function(value, duration, easing) {
-      if(duration) {
-        return overloadFn.apply(this, arguments);
-      }
-      return superFn.apply(this, arguments);
-    };
-  };
+  angular.forEach(proto, function(fn, key) {
+    angular.element.prototype[key] = fn;
 
-  for(var methodName in overloaders) {
-    proto[methodName] = (proto[methodName] ? overloadScrollPos(proto[methodName], overloaders[methodName]) : overloaders[methodName]);
-  }
+    //Remove prefix if not already claimed by jQuery / ui.utils
+    var unprefixed = key.replace(/^duScroll/, 'scroll');
+    if(angular.isUndefined(angular.element.prototype[unprefixed])) {
+      angular.element.prototype[unprefixed] = fn;
+    }
+  });
+
 }]);
 
 
@@ -395,6 +393,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
     if(i !== -1) {
       context.spies.splice(i, 1);
     }
+		spy.$element = null;
   };
 
   return {
@@ -469,7 +468,7 @@ angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scr
         var duration  = $attr.duration ? parseInt($attr.duration, 10) : duScrollDuration;
         var container = scrollContainerAPI.getContainer($scope);
 
-        container.scrollToElement(
+        container.duScrollToElement(
           angular.element(target), 
           isNaN(offset) ? 0 : offset, 
           isNaN(duration) ? 0 : duration
