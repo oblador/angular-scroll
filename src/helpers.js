@@ -20,7 +20,7 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     var aliasFn;
     if(angular.isElement(left)) {
       aliasFn = this.duScrollToElement;
-    } else if(duration) {
+    } else if(angular.isDefined(duration)) {
       aliasFn = this.duScrollToAnimated;
     }
     if(aliasFn) {
@@ -62,7 +62,10 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     }
     deferred = $q.defer();
 
-    if(!deltaLeft && !deltaTop) {
+    if(duration === 0 || (!deltaLeft && !deltaTop)) {
+      if(duration === 0) {
+        el.duScrollTo(left, top);
+      }
       deferred.resolve();
       return deferred.promise;
     }
