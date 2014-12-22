@@ -108,7 +108,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
   };
 
   var getContextForSpy = function(spy) {
-    var context, contextId, scope = spy.$element.scope();
+    var context, contextId, scope = spy.$scope;
     if(scope) {
       return getContextForScope(scope);
     }
@@ -139,7 +139,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
       if(context.container) {
         context.container.off('scroll', context.handler);
       }
-      context.container = scrollContainerAPI.getContainer(spy.$element.scope());
+      context.container = scrollContainerAPI.getContainer(spy.$scope);
       context.container.on('scroll', context.handler).triggerHandler('scroll');
     }
   };
