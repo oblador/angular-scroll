@@ -1,5 +1,5 @@
 angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
-.factory('spyAPI', function($rootScope, $timeout, scrollContainerAPI, duScrollGreedy, duScrollSpyWait) {
+.factory('spyAPI', function($rootScope, $timeout, $window, $document, scrollContainerAPI, duScrollGreedy, duScrollSpyWait) {
   'use strict';
 
   var createScrollHandler = function(context) {
@@ -8,11 +8,16 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
       queued = false;
       var container = context.container,
           containerEl = container[0],
-          containerOffset = 0;
+          containerOffset = 0,
+          bottomReached;
 
       if (typeof HTMLElement !== 'undefined' && containerEl instanceof HTMLElement || containerEl.nodeType && containerEl.nodeType === containerEl.ELEMENT_NODE) {
         containerOffset = containerEl.getBoundingClientRect().top;
+        bottomReached = Math.round(containerEl.scrollTop + containerEl.clientHeight) >= containerEl.scrollHeight;
+      } else {
+        bottomReached = Math.round($window.scrollY + $window.innerHeight) >= $document[0].body.scrollHeight;
       }
+      var compareProperty = (bottomReached ? 'bottom' : 'top')
 
       var i, currentlyActive, toBeActive, spies, spy, pos;
       spies = context.spies;
@@ -24,15 +29,17 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
         pos = spy.getTargetPosition();
         if (!pos) continue;
 
-        if(pos.top + spy.offset - containerOffset < 20 && (pos.top*-1 + containerOffset) < pos.height) {
-          if(!toBeActive || toBeActive.top < pos.top) {
+        if(bottomReached || (pos.top + spy.offset - containerOffset < 20 && (pos.top*-1 + containerOffset) < pos.height)) {
+          //Find the one closest the viewport top or the page bottom if it's reached
+          if(!toBeActive || toBeActive[compareProperty] < pos[compareProperty]) {
             toBeActive = {
-              top: pos.top,
               spy: spy
             };
+            toBeActive[compareProperty] = pos[compareProperty];
           }
         }
       }
+
       if(toBeActive) {
         toBeActive = toBeActive.spy;
       }
