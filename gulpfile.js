@@ -11,7 +11,7 @@ var karmaConfPath = './test/karma.conf.js';
 var karmaConf = require(karmaConfPath);
 
 var sources = [
-  'src/module.js', 
+  'src/module.js',
   'src/helpers.js',
   'src/services/request-animation.js',
   'src/services/spy-api.js',

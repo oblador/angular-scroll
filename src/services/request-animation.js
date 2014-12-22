@@ -33,7 +33,7 @@ angular.module('duScroll.requestAnimation', ['duScroll.polyfill'])
     lastTime = currTime + timeToCall;
     return id;
   };
-  
+
   return polyfill('requestAnimationFrame', fallback);
 })
 .factory('cancelAnimation', function(polyfill, $timeout) {

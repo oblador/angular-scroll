@@ -7,7 +7,7 @@ describe('defaults', function() {
     expect(duScrollDuration).not.toBe(null);
   }));
 
-  
+
   it('should should have a default easing function', inject(function(duScrollEasing) {
     expect(duScrollEasing).not.toBe(null);
   }));

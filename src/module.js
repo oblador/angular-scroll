@@ -11,9 +11,9 @@ var duScrollDefaultEasing = function (x) {
 };
 
 angular.module('duScroll', [
-  'duScroll.scrollspy', 
-  'duScroll.smoothScroll', 
-  'duScroll.scrollContainer', 
+  'duScroll.scrollspy',
+  'duScroll.smoothScroll',
+  'duScroll.scrollContainer',
   'duScroll.spyContext',
   'duScroll.scrollHelpers'
 ])
@@ -21,7 +21,7 @@ angular.module('duScroll', [
   .value('duScrollDuration', 350)
   //Scrollspy debounce interval, set to 0 to disable
   .value('duScrollSpyWait', 100)
-  //Wether or not multiple scrollspies can be active at once 
+  //Wether or not multiple scrollspies can be active at once
   .value('duScrollGreedy', false)
   //Default offset for smoothScroll directive
   .value('duScrollOffset', 0)

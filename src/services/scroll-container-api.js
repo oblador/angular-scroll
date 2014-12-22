@@ -33,8 +33,8 @@ angular.module('duScroll.scrollContainerAPI', [])
   };
 
   return {
-    getContainerId:   getContainerId, 
-    getContainer:     getContainer, 
+    getContainerId:   getContainerId,
+    getContainer:     getContainer,
     setContainer:     setContainer,
     removeContainer:  removeContainer
   };
