@@ -29,7 +29,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
         pos = spy.getTargetPosition();
         if (!pos) continue;
 
-        if(bottomReached || (pos.top + spy.offset - containerOffset < 20 && (pos.top*-1 + containerOffset) < pos.height)) {
+        if(bottomReached || (pos.top + spy.offset - containerOffset < 20 && (duScrollGreedy || pos.top*-1 + containerOffset) < pos.height)) {
           //Find the one closest the viewport top or the page bottom if it's reached
           if(!toBeActive || toBeActive[compareProperty] < pos[compareProperty]) {
             toBeActive = {
