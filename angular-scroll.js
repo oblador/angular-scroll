@@ -11,9 +11,9 @@ var duScrollDefaultEasing = function (x) {
 };
 
 angular.module('duScroll', [
-  'duScroll.scrollspy', 
-  'duScroll.smoothScroll', 
-  'duScroll.scrollContainer', 
+  'duScroll.scrollspy',
+  'duScroll.smoothScroll',
+  'duScroll.scrollContainer',
   'duScroll.spyContext',
   'duScroll.scrollHelpers'
 ])
@@ -21,7 +21,7 @@ angular.module('duScroll', [
   .value('duScrollDuration', 350)
   //Scrollspy debounce interval, set to 0 to disable
   .value('duScrollSpyWait', 100)
-  //Wether or not multiple scrollspies can be active at once 
+  //Wether or not multiple scrollspies can be active at once
   .value('duScrollGreedy', false)
   //Default offset for smoothScroll directive
   .value('duScrollOffset', 0)
@@ -51,7 +51,7 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     var aliasFn;
     if(angular.isElement(left)) {
       aliasFn = this.duScrollToElement;
-    } else if(duration) {
+    } else if(angular.isDefined(duration)) {
       aliasFn = this.duScrollToAnimated;
     }
     if(aliasFn) {
@@ -93,7 +93,10 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     }
     deferred = $q.defer();
 
-    if(!deltaLeft && !deltaTop) {
+    if(duration === 0 || (!deltaLeft && !deltaTop)) {
+      if(duration === 0) {
+        el.duScrollTo(left, top);
+      }
       deferred.resolve();
       return deferred.promise;
     }
@@ -221,7 +224,7 @@ angular.module('duScroll.requestAnimation', ['duScroll.polyfill'])
     lastTime = currTime + timeToCall;
     return id;
   };
-  
+
   return polyfill('requestAnimationFrame', fallback);
 }])
 .factory('cancelAnimation', ["polyfill", "$timeout", function(polyfill, $timeout) {
@@ -236,7 +239,7 @@ angular.module('duScroll.requestAnimation', ['duScroll.polyfill'])
 
 
 angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
-.factory('spyAPI', ["$rootScope", "$timeout", "scrollContainerAPI", "duScrollGreedy", "duScrollSpyWait", function($rootScope, $timeout, scrollContainerAPI, duScrollGreedy, duScrollSpyWait) {
+.factory('spyAPI', ["$rootScope", "$timeout", "$window", "$document", "scrollContainerAPI", "duScrollGreedy", "duScrollSpyWait", function($rootScope, $timeout, $window, $document, scrollContainerAPI, duScrollGreedy, duScrollSpyWait) {
   'use strict';
 
   var createScrollHandler = function(context) {
@@ -245,11 +248,16 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
       queued = false;
       var container = context.container,
           containerEl = container[0],
-          containerOffset = 0;
+          containerOffset = 0,
+          bottomReached;
 
       if (typeof HTMLElement !== 'undefined' && containerEl instanceof HTMLElement || containerEl.nodeType && containerEl.nodeType === containerEl.ELEMENT_NODE) {
         containerOffset = containerEl.getBoundingClientRect().top;
+        bottomReached = Math.round(containerEl.scrollTop + containerEl.clientHeight) >= containerEl.scrollHeight;
+      } else {
+        bottomReached = Math.round($window.pageYOffset + $window.innerHeight) >= $document[0].body.scrollHeight;
       }
+      var compareProperty = (bottomReached ? 'bottom' : 'top');
 
       var i, currentlyActive, toBeActive, spies, spy, pos;
       spies = context.spies;
@@ -261,15 +269,17 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
         pos = spy.getTargetPosition();
         if (!pos) continue;
 
-        if(pos.top + spy.offset - containerOffset < 20 && (pos.top*-1 + containerOffset) < pos.height) {
-          if(!toBeActive || toBeActive.top < pos.top) {
+        if(bottomReached || (pos.top + spy.offset - containerOffset < 20 && (duScrollGreedy || pos.top*-1 + containerOffset) < pos.height)) {
+          //Find the one closest the viewport top or the page bottom if it's reached
+          if(!toBeActive || toBeActive[compareProperty] < pos[compareProperty]) {
             toBeActive = {
-              top: pos.top,
               spy: spy
             };
+            toBeActive[compareProperty] = pos[compareProperty];
           }
         }
       }
+
       if(toBeActive) {
         toBeActive = toBeActive.spy;
       }
@@ -438,8 +448,8 @@ angular.module('duScroll.scrollContainerAPI', [])
   };
 
   return {
-    getContainerId:   getContainerId, 
-    getContainer:     getContainer, 
+    getContainerId:   getContainerId,
+    getContainer:     getContainer,
     setContainer:     setContainer,
     removeContainer:  removeContainer
   };
@@ -457,7 +467,7 @@ angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scr
 
         var target = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
         if(!target || !target.getBoundingClientRect) return;
-        
+
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
@@ -466,8 +476,8 @@ angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scr
         var container = scrollContainerAPI.getContainer($scope);
 
         container.duScrollToElement(
-          angular.element(target), 
-          isNaN(offset) ? 0 : offset, 
+          angular.element(target),
+          isNaN(offset) ? 0 : offset,
           isNaN(duration) ? 0 : duration
         );
       });
