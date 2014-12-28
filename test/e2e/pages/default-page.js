@@ -4,7 +4,7 @@ var DefaultPage = (function () {
   function DefaultPage() {
     this.links        = element.all(By.css('nav a'));
     this.activeLinks  = element.all(By.css('nav a.active'));
-    this.topButton    = element(By.css('footer button'));
+    this.topButton    = element(By.css('footer button:first-child'));
   }
 
   DefaultPage.prototype.visitPage = function () {
@@ -20,6 +20,19 @@ var DefaultPage = (function () {
   DefaultPage.prototype.scrollToSection = function (nr) {
     return this.links.get(nr).click().then(function() {
       ptor.sleep(500);
+    });
+  };
+
+  DefaultPage.prototype.scrollBackAndForth = function (nr) {
+    var self = this;
+    return self.links.get(nr).click().then(function() {
+      ptor.sleep(100);
+      return self.topButton.click().then(function() {
+        ptor.sleep(100);
+        return self.links.get(nr).click().then(function() {
+          ptor.sleep(500);
+        });
+      });
     });
   };
 

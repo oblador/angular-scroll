@@ -1,11 +1,9 @@
-require('protractor/jasminewd');
 require('jasmine-given');
 
 var DefaultPage = require('./pages/default-page');
 
 describe('duScroll', function() {
   var page = new DefaultPage();
-  var ptor = protractor.getInstance();
   page.visitPage();
 
   describe('duScrollspy', function() {
@@ -29,6 +27,13 @@ describe('duScroll', function() {
     it('should make all links inactive after scrolling to top', function() {
       page.scrollToTop().then(function() {
         expect(page.activeLinks.count()).toBe(0);
+      });
+    });
+
+    it('should cancel all animations except the last one', function() {
+      page.scrollBackAndForth(2).then(function() {
+        expect(page.activeLinks.count()).toBe(1);
+        expect(page.links.get(2).getAttribute('class')).toBe('active');
       });
     });
   });
