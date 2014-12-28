@@ -116,13 +116,13 @@
   </footer>
 </div>
 
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
 <script src="../angular-scroll.js"></script>
 <script>
 angular.module('myApp', ['duScroll']).
   controller('MyCtrl', function($scope, $document){
     $scope.toTheTop = function() {
-      $document.scrollTopAnimated(0).then(function() {
+      $document.scrollTopAnimated(0, 5000).then(function() {
         console && console.log('You just scrolled to the top!');
       });
     }
