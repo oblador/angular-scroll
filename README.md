@@ -1,7 +1,7 @@
 angular-scroll
 ==============
 
-Only dependent on AngularJS (no jQuery). 8K minified or 2K gzipped.
+Angular is only dependency (no jQuery). 8K minified or 2K gzipped.
 
 Example
 -------
@@ -9,11 +9,19 @@ Check out [the live demo](http://oblador.github.io/angular-scroll/) or the [sour
 
 Install
 -------
-With bower:
+
+#### With bower:
 
     $ bower install angular-scroll
 
-Or download the [production version](https://raw.github.com/oblador/angular-scroll/master/angular-scroll.min.js) or the [development version](https://raw.github.com/oblador/angular-scroll/master/angular-scroll.js). 
+#### With npm (for use with browserify):
+
+    $ npm install angular-scroll
+
+You can also download the [production version](https://raw.github.com/oblador/angular-scroll/master/angular-scroll.min.js)or the [development version](https://raw.github.com/oblador/angular-scroll/master/angular-scroll.js).
+
+If you prefer a CDN hosted version (which might speed up your load times), check out [cdnjs.com/libraries/angular-scroll](https://cdnjs.com/libraries/angular-scroll).
+
 
 Don't forget to add `duScroll` to your module dependencies. 
 
