@@ -20,7 +20,7 @@
   "scripts": {
     "start": "http-server -p 8888",
     "test": "./node_modules/karma/bin/karma start test/karma.conf.js",
-    "build": "gulp",
+    "build": "./node_modules/.bin/gulp",
     "test-single-run": "./node_modules/karma/bin/karma start test/karma.conf.js  --single-run",
     "update-webdriver": "node_modules/protractor/bin/webdriver-manager update",
     "protractor": "node_modules/protractor/bin/protractor test/protractor-conf.js"
