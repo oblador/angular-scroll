@@ -1,5 +1,5 @@
 angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
-.factory('spyAPI', function($rootScope, $timeout, $window, $document, scrollContainerAPI, duScrollGreedy, duScrollThrottle, duScrollDebouce) {
+.factory('spyAPI', function($rootScope, $timeout, $window, $document, scrollContainerAPI, duScrollGreedy, duScrollThrottle) {
   'use strict';
 
   var createScrollHandler = function(context) {
@@ -75,17 +75,6 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
     };
   };
 
-  var stopedScrollTimer;
-
-  var createScrollDebouceHandler = function() {
-    return function() {
-      $timeout.cancel(stopedScrollTimer);
-      stopedScrollTimer = $timeout(function() {
-        $rootScope.$broadcast('duScrollspy:scrollStopped');
-      }, duScrollDebouce, false);
-    };
-  };
-
   var contexts = {};
 
   var createContext = function($scope) {
@@ -95,7 +84,6 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
     };
 
     context.handler = createScrollHandler(context);
-    context.debouceHandler = createScrollDebouceHandler();
     contexts[id] = context;
 
     $scope.$on('$destroy', function() {
@@ -108,10 +96,9 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
   var destroyContext = function($scope) {
     var id = $scope.$id;
     var context = contexts[id], container = context.container;
-    if(container) {
+    if(container)
       container.off('scroll', context.handler);
-      container.off('scroll', context.debouceHandler);
-    }
+
     delete contexts[id];
   };
 
@@ -158,12 +145,9 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
     if (!context.container || !isElementInDocument(context.container)) {
       if(context.container) {
         context.container.off('scroll', context.handler);
-        context.container.off('scroll', context.debouceHandler);
       }
       context.container = scrollContainerAPI.getContainer(spy.$scope);
       context.container.on('scroll', context.handler).triggerHandler('scroll');
-      if(duScrollDebouce)
-        context.container.on('scroll', context.debouceHandler);
     }
   };
 

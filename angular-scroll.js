@@ -15,12 +15,13 @@ angular.module('duScroll', [
   'duScroll.smoothScroll',
   'duScroll.scrollContainer',
   'duScroll.spyContext',
-  'duScroll.scrollHelpers'
+  'duScroll.scrollHelpers',
+  'duScroll.scrollNotify'
 ])
   //Default animation duration for smoothScroll directive
   .value('duScrollDuration', 350)
   //Scrollspy debouce interval, set to 0 to disable
-  .value('duScrollDebouce', 0)
+  .value('duScrollDebouce', 300)
   //Scrollspy throttle interval, set to 0 to disable
   .value('duScrollThrottle', 100)
   //Wether or not multiple scrollspies can be active at once
@@ -241,7 +242,7 @@ angular.module('duScroll.requestAnimation', ['duScroll.polyfill'])
 
 
 angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
-.factory('spyAPI', ["$rootScope", "$timeout", "$window", "$document", "scrollContainerAPI", "duScrollGreedy", "duScrollThrottle", "duScrollDebouce", function($rootScope, $timeout, $window, $document, scrollContainerAPI, duScrollGreedy, duScrollThrottle, duScrollDebouce) {
+.factory('spyAPI', ["$rootScope", "$timeout", "$window", "$document", "scrollContainerAPI", "duScrollGreedy", "duScrollThrottle", function($rootScope, $timeout, $window, $document, scrollContainerAPI, duScrollGreedy, duScrollThrottle) {
   'use strict';
 
   var createScrollHandler = function(context) {
@@ -317,17 +318,6 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
     };
   };
 
-  var stopedScrollTimer;
-
-  var createScrollDebouceHandler = function() {
-    return function() {
-      $timeout.cancel(stopedScrollTimer);
-      stopedScrollTimer = $timeout(function() {
-        $rootScope.$broadcast('duScrollspy:scrollStopped');
-      }, duScrollDebouce, false);
-    };
-  };
-
   var contexts = {};
 
   var createContext = function($scope) {
@@ -337,7 +327,6 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
     };
 
     context.handler = createScrollHandler(context);
-    context.debouceHandler = createScrollDebouceHandler();
     contexts[id] = context;
 
     $scope.$on('$destroy', function() {
@@ -350,10 +339,9 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
   var destroyContext = function($scope) {
     var id = $scope.$id;
     var context = contexts[id], container = context.container;
-    if(container) {
+    if(container)
       container.off('scroll', context.handler);
-      container.off('scroll', context.debouceHandler);
-    }
+
     delete contexts[id];
   };
 
@@ -400,12 +388,9 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
     if (!context.container || !isElementInDocument(context.container)) {
       if(context.container) {
         context.container.off('scroll', context.handler);
-        context.container.off('scroll', context.debouceHandler);
       }
       context.container = scrollContainerAPI.getContainer(spy.$scope);
       context.container.on('scroll', context.handler).triggerHandler('scroll');
-      if(duScrollDebouce)
-        context.container.on('scroll', context.debouceHandler);
     }
   };
 
@@ -470,6 +455,39 @@ angular.module('duScroll.scrollContainerAPI', [])
     getContainer:     getContainer,
     setContainer:     setContainer,
     removeContainer:  removeContainer
+  };
+}]);
+
+
+angular.module('duScroll.notifyAPI', [])
+.factory('notifyAPI', ["$rootScope", "$timeout", "duScrollDebouce", function($rootScope, $timeout, duScrollDebouce) {
+  'use strict';
+
+  var stopedScrollTimer;
+
+  var createScrollDebouceHandler = function() {
+    return function() {
+      $timeout.cancel(stopedScrollTimer);
+      stopedScrollTimer = $timeout(function() {
+        $rootScope.$broadcast('duScrollspy:scrollStopped');
+      }, duScrollDebouce, false);
+    };
+  };
+
+  var context = {};
+
+  var addNotifier = function(container) {
+    context.debouceHandler = createScrollDebouceHandler();
+    container.on('scroll', context.debouceHandler);
+  };
+
+  var removeNotifier = function(container) {
+    container.off('scroll', context.debouceHandler);
+  };
+
+  return {
+    addNotifier: addNotifier,
+    removeNotifier: removeNotifier,
   };
 }]);
 
@@ -609,6 +627,25 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
         $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
         $rootScope.$on('$stateChangeSuccess', spy.flushTargetCache.bind(spy));
       }, 0, false);
+    }
+  };
+}]);
+
+
+angular.module('duScroll.scrollNotify', ['duScroll.notifyAPI'])
+.directive('duScrollNotify', ["notifyAPI", function(notifyAPI){
+  'use strict';
+
+  return {
+    restrict: 'A',
+    link : function ($scope, $element, $attr){
+
+      notifyAPI.addNotifier($element);
+
+      $scope.$on('$destroy', function() {
+        notifyAPI.removeNotifier($element);
+      });
+
     }
   };
 }]);
