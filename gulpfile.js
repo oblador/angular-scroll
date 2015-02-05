@@ -16,10 +16,12 @@ var sources = [
   'src/services/request-animation.js',
   'src/services/spy-api.js',
   'src/services/scroll-container-api.js',
+  'src/services/notify-api.js',
   'src/directives/smooth-scroll.js',
   'src/directives/spy-context.js',
   'src/directives/scroll-container.js',
-  'src/directives/scrollspy.js'
+  'src/directives/scrollspy.js',
+  'src/directives/scroll-notify.js'
 ];
 
 var targets = 'angular-scroll.{js,min.js,min.js.map}';
