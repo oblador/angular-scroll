@@ -1,3 +1,5 @@
+var path = require('path');
+
 var testFiles = [
   'bower_components/angular/angular.js',
   'bower_components/angular-mocks/angular-mocks.js',
@@ -7,7 +9,7 @@ var testFiles = [
 
 module.exports = function(config){
   var options = {
-    basePath : '../',
+    basePath : path.dirname(__dirname),
     files : testFiles,
     autoWatch : true,
     frameworks: ['jasmine'],

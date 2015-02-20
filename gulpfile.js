@@ -6,7 +6,7 @@ var uglify = require('gulp-uglify');
 var ngmin  = require('gulp-ng-annotate');
 var sourcemaps = require('gulp-sourcemaps');
 
-var karma = require('gulp-karma');
+var karma = require('karma').server;
 var karmaConfPath = './test/karma.conf.js';
 var karmaConf = require(karmaConfPath);
 
@@ -35,15 +35,8 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('default'));
 });
 
-gulp.task('test', function() {
-  return gulp.src(karmaConf.testFiles)
-    .pipe(karma({
-      configFile: karmaConfPath,
-      action: 'run'
-    }))
-    .on('error', function(err) {
-      throw err;
-    });
+gulp.task('test', function(done) {
+  karma.start({configFile: __dirname + '/test/karma.conf.js', singleRun: true}, done);
 });
 
 gulp.task('compress', function() {

@@ -31,7 +31,6 @@
     "gulp": "~3.8.0",
     "gulp-concat": "~2.3.4",
     "gulp-jshint": "~1.8.4",
-    "gulp-karma": "0.0.4",
     "gulp-ng-annotate": "~0.3.0",
     "gulp-rimraf": "~0.1.0",
     "gulp-sourcemaps": "^1.1.1",
