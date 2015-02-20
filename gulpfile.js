@@ -35,7 +35,7 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('default'));
 });
 
-gulp.task('test', function(done) {
+gulp.task('karma', function(done) {
   karma.start({configFile: __dirname + '/test/karma.conf.js', singleRun: true}, done);
 });
 
@@ -56,4 +56,6 @@ gulp.task('compress', function() {
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('default', ['lint', 'test', 'clean', 'compress']);
+gulp.task('build', ['clean', 'compress']);
+gulp.task('test', ['lint', 'karma']);
+gulp.task('default', ['test', 'build']);

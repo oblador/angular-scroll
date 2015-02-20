@@ -20,27 +20,28 @@
   "scripts": {
     "start": "http-server -p 8888",
     "test": "./node_modules/karma/bin/karma start test/karma.conf.js",
-    "build": "./node_modules/.bin/gulp",
-    "test-single-run": "./node_modules/karma/bin/karma start test/karma.conf.js  --single-run",
+    "build": "./node_modules/.bin/gulp build",
+    "test-ci": "./node_modules/.bin/gulp test",
+    "test-single-run": "./node_modules/karma/bin/karma start test/karma.conf.js --single-run",
     "update-webdriver": "node_modules/protractor/bin/webdriver-manager update",
-    "protractor": "node_modules/protractor/bin/protractor test/protractor-conf.js"
+    "protractor": "node_modules/protractor/bin/protractor test/protractor.conf.js"
   },
   "author": "Joel Arvidsson",
   "license": "MIT",
   "devDependencies": {
-    "gulp": "~3.8.0",
-    "gulp-concat": "~2.3.4",
-    "gulp-jshint": "~1.8.4",
-    "gulp-ng-annotate": "~0.3.0",
-    "gulp-rimraf": "~0.1.0",
-    "gulp-sourcemaps": "^1.1.1",
-    "gulp-uglify": "~0.3.1",
-    "http-server": "^0.6.1",
-    "jasmine-given": "~2.6.2",
-    "karma": "~0.12.21",
-    "karma-chrome-launcher": "~0.1.3",
-    "karma-firefox-launcher": "~0.1.3",
-    "karma-jasmine": "~0.2.0",
-    "protractor": "~1.0.0"
+    "gulp": "^3.8.11",
+    "gulp-concat": "^2.5.1",
+    "gulp-jshint": "^1.9.2",
+    "gulp-ng-annotate": "^0.5.2",
+    "gulp-rimraf": "^0.1.1",
+    "gulp-sourcemaps": "^1.3.0",
+    "gulp-uglify": "^1.1.0",
+    "http-server": "^0.7.4",
+    "jasmine-given": "^2.6.2",
+    "karma": "^0.12.31",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-firefox-launcher": "^0.1.4",
+    "karma-jasmine": "^0.3.5",
+    "protractor": "^1.7.0"
   }
 }

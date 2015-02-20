@@ -13,7 +13,7 @@ module.exports = function(config){
     files : testFiles,
     autoWatch : true,
     frameworks: ['jasmine'],
-    browsers : ['Chrome'],
+    browsers : ['Firefox', 'Chrome'],
     customLaunchers: {
       Chrome_travis_ci: {
         base: 'Chrome',

@@ -6,10 +6,11 @@ describe('jqlite helpers', function() {
   describe('scrollTopAnimated', function() {
     var duration = 100;
 
-    it('should return a promise', inject(function($document, $rootScope) {
+    it('should return a promise', inject(function($document, $q, $rootScope) {
+      var deferred = $q.defer();
       var promise = $document.scrollTopAnimated(100, duration);
       expect(promise).toEqual(jasmine.any(Object));
-      expect(Object.keys(promise)).toEqual(['then', 'catch', 'finally']);
+      expect(Object.keys(promise)).toEqual(Object.keys(deferred.promise));
 
       it('which should resolve when done animating', function(done){
         spyOn(promise, 'then');
