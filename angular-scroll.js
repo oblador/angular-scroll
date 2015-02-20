@@ -75,12 +75,12 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
         deltaLeft = Math.round(left - startLeft),
         deltaTop = Math.round(top - startTop);
 
-    var startTime = null;
+    var startTime = null, progress = 0;
     var el = this;
 
     var cancelOnEvents = 'scroll mousedown mousewheel touchmove keydown';
     var cancelScrollAnimation = function($event) {
-      if (!$event || $event.which > 0) {
+      if (!$event || (progress && $event.which > 0)) {
         el.unbind(cancelOnEvents, cancelScrollAnimation);
         cancelAnimation(scrollAnimation);
         deferred.reject();
@@ -106,7 +106,7 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
         startTime = timestamp;
       }
 
-      var progress = timestamp - startTime;
+      progress = timestamp - startTime;
       var percent = (progress >= duration ? 1 : easing(progress/duration));
 
       el.scrollTo(
