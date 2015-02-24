@@ -1,5 +1,5 @@
 angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
-.factory('spyAPI', function($rootScope, $timeout, $window, $document, scrollContainerAPI, duScrollGreedy, duScrollSpyWait) {
+.factory('spyAPI', function($rootScope, $timeout, $window, $document, scrollContainerAPI, duScrollGreedy, duScrollSpyWait, duScrollBottomSpy) {
   'use strict';
 
   var createScrollHandler = function(context) {
@@ -17,7 +17,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
       } else {
         bottomReached = Math.round($window.pageYOffset + $window.innerHeight) >= $document[0].body.scrollHeight;
       }
-      var compareProperty = (bottomReached ? 'bottom' : 'top');
+      var compareProperty = (duScrollBottomSpy && bottomReached ? 'bottom' : 'top');
 
       var i, currentlyActive, toBeActive, spies, spy, pos;
       spies = context.spies;
@@ -29,7 +29,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
         pos = spy.getTargetPosition();
         if (!pos) continue;
 
-        if(bottomReached || (pos.top + spy.offset - containerOffset < 20 && (duScrollGreedy || pos.top*-1 + containerOffset) < pos.height)) {
+        if((duScrollBottomSpy && bottomReached) || (pos.top + spy.offset - containerOffset < 20 && (duScrollGreedy || pos.top*-1 + containerOffset) < pos.height)) {
           //Find the one closest the viewport top or the page bottom if it's reached
           if(!toBeActive || toBeActive[compareProperty] < pos[compareProperty]) {
             toBeActive = {
