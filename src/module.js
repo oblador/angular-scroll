@@ -21,6 +21,9 @@ var duScroll = angular.module('duScroll', [
   .value('duScrollDuration', 350)
   //Scrollspy debounce interval, set to 0 to disable
   .value('duScrollSpyWait', 100)
+  //Scrollspy forced refresh interval, use if your content changes or reflows without scrolling.
+  //0 to disable
+  .value('duScrollSpyRefreshInterval', 0)
   //Wether or not multiple scrollspies can be active at once
   .value('duScrollGreedy', false)
   //Default offset for smoothScroll directive
