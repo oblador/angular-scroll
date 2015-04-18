@@ -51,11 +51,12 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
         var spy = new Spy(targetId, $scope, $element, -($attr.offset ? parseInt($attr.offset, 10) : duScrollOffset));
         spyAPI.addSpy(spy);
 
+        $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
+        var deregisterOnStateChange = $rootScope.$on('$stateChangeSuccess', spy.flushTargetCache.bind(spy));
         $scope.$on('$destroy', function() {
           spyAPI.removeSpy(spy);
+          deregisterOnStateChange();
         });
-        $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
-        $rootScope.$on('$stateChangeSuccess', spy.flushTargetCache.bind(spy));
       }, 0, false);
     }
   };
