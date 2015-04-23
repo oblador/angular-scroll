@@ -466,6 +466,10 @@ angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scr
         if(!$attr.href || $attr.href.indexOf('#') === -1) return;
 
         var target = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
+        if (!target) {
+           // If the is no such id, try to look for names
+           target = document.getElementsByName($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1))[0];
+        }
         if(!target || !target.getBoundingClientRect) return;
 
         if (e.stopPropagation) e.stopPropagation();
