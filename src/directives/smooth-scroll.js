@@ -5,9 +5,11 @@ angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scr
   return {
     link : function($scope, $element, $attr) {
       $element.on('click', function(e) {
-        if(!$attr.href || $attr.href.indexOf('#') === -1) return;
+        if((!$attr.href || $attr.href.indexOf('#') === -1) && $attr.duSmoothScroll === '') return;
 
-        var target = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
+        var id = $attr.href ? $attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1) : $attr.duSmoothScroll;
+
+        var target = document.getElementById(id);
         if(!target || !target.getBoundingClientRect) return;
 
         if (e.stopPropagation) e.stopPropagation();
