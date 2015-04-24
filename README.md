@@ -225,6 +225,13 @@ To change default offset (in pixels) for the `du-smooth-scroll` directive:
 angular.module('myApp', ['duScroll']).value('duScrollOffset', 30);
 ```
 
+### Bottom spy
+To make the last `du-scrollspy` link active when scroll reaches page/container bottom:
+
+```js
+angular.module('myApp', ['duScroll']).value('duScrollBottomSpy', true);
+```
+
 Events
 ------
 
