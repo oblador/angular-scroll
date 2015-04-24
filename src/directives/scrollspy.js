@@ -15,7 +15,7 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
 
   Spy.prototype.getTargetElement = function() {
     if (!this.target && this.targetId) {
-      this.target = document.getElementById(this.targetId);
+      this.target = document.getElementById(this.targetId) || document.getElementsByName(this.targetId)[0]
     }
     return this.target;
   };
@@ -42,6 +42,8 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
         targetId = href.replace(/.*(?=#[^\s]+$)/, '').substring(1);
       } else if($attr.duScrollspy) {
         targetId = $attr.duScrollspy;
+      } else if($attr.duSmoothScroll) {
+        targetId = $attr.duSmoothScroll;
       }
       if(!targetId) return;
 
