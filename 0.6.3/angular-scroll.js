@@ -11,9 +11,9 @@ var duScrollDefaultEasing = function (x) {
 };
 
 angular.module('duScroll', [
-  'duScroll.scrollspy',
-  'duScroll.smoothScroll',
-  'duScroll.scrollContainer',
+  'duScroll.scrollspy', 
+  'duScroll.smoothScroll', 
+  'duScroll.scrollContainer', 
   'duScroll.spyContext',
   'duScroll.scrollHelpers'
 ])
@@ -21,14 +21,12 @@ angular.module('duScroll', [
   .value('duScrollDuration', 350)
   //Scrollspy debounce interval, set to 0 to disable
   .value('duScrollSpyWait', 100)
-  //Wether or not multiple scrollspies can be active at once
+  //Wether or not multiple scrollspies can be active at once 
   .value('duScrollGreedy', false)
   //Default offset for smoothScroll directive
   .value('duScrollOffset', 0)
   //Default easing function for scroll animation
-  .value('duScrollEasing', duScrollDefaultEasing)
-  //Whether or not to activate the last scrollspy, when page/container bottom is reached
-  .value('duScrollBottomSpy', false);
+  .value('duScrollEasing', duScrollDefaultEasing);
 
 
 angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
@@ -53,7 +51,7 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     var aliasFn;
     if(angular.isElement(left)) {
       aliasFn = this.duScrollToElement;
-    } else if(angular.isDefined(duration)) {
+    } else if(duration) {
       aliasFn = this.duScrollToAnimated;
     }
     if(aliasFn) {
@@ -77,12 +75,12 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
         deltaLeft = Math.round(left - startLeft),
         deltaTop = Math.round(top - startTop);
 
-    var startTime = null, progress = 0;
+    var startTime = null;
     var el = this;
 
     var cancelOnEvents = 'scroll mousedown mousewheel touchmove keydown';
     var cancelScrollAnimation = function($event) {
-      if (!$event || (progress && $event.which > 0)) {
+      if (!$event || $event.which > 0) {
         el.unbind(cancelOnEvents, cancelScrollAnimation);
         cancelAnimation(scrollAnimation);
         deferred.reject();
@@ -95,10 +93,7 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     }
     deferred = $q.defer();
 
-    if(duration === 0 || (!deltaLeft && !deltaTop)) {
-      if(duration === 0) {
-        el.duScrollTo(left, top);
-      }
+    if(!deltaLeft && !deltaTop) {
       deferred.resolve();
       return deferred.promise;
     }
@@ -108,7 +103,7 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
         startTime = timestamp;
       }
 
-      progress = timestamp - startTime;
+      var progress = timestamp - startTime;
       var percent = (progress >= duration ? 1 : easing(progress/duration));
 
       el.scrollTo(
@@ -226,7 +221,7 @@ angular.module('duScroll.requestAnimation', ['duScroll.polyfill'])
     lastTime = currTime + timeToCall;
     return id;
   };
-
+  
   return polyfill('requestAnimationFrame', fallback);
 }])
 .factory('cancelAnimation', ["polyfill", "$timeout", function(polyfill, $timeout) {
@@ -241,7 +236,7 @@ angular.module('duScroll.requestAnimation', ['duScroll.polyfill'])
 
 
 angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
-.factory('spyAPI', ["$rootScope", "$timeout", "$window", "$document", "scrollContainerAPI", "duScrollGreedy", "duScrollSpyWait", "duScrollBottomSpy", function($rootScope, $timeout, $window, $document, scrollContainerAPI, duScrollGreedy, duScrollSpyWait, duScrollBottomSpy) {
+.factory('spyAPI', ["$rootScope", "$timeout", "scrollContainerAPI", "duScrollGreedy", "duScrollSpyWait", function($rootScope, $timeout, scrollContainerAPI, duScrollGreedy, duScrollSpyWait) {
   'use strict';
 
   var createScrollHandler = function(context) {
@@ -250,16 +245,11 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
       queued = false;
       var container = context.container,
           containerEl = container[0],
-          containerOffset = 0,
-          bottomReached;
+          containerOffset = 0;
 
       if (typeof HTMLElement !== 'undefined' && containerEl instanceof HTMLElement || containerEl.nodeType && containerEl.nodeType === containerEl.ELEMENT_NODE) {
         containerOffset = containerEl.getBoundingClientRect().top;
-        bottomReached = Math.round(containerEl.scrollTop + containerEl.clientHeight) >= containerEl.scrollHeight;
-      } else {
-        bottomReached = Math.round($window.pageYOffset + $window.innerHeight) >= $document[0].body.scrollHeight;
       }
-      var compareProperty = (duScrollBottomSpy && bottomReached ? 'bottom' : 'top');
 
       var i, currentlyActive, toBeActive, spies, spy, pos;
       spies = context.spies;
@@ -271,17 +261,15 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
         pos = spy.getTargetPosition();
         if (!pos) continue;
 
-        if((duScrollBottomSpy && bottomReached) || (pos.top + spy.offset - containerOffset < 20 && (duScrollGreedy || pos.top*-1 + containerOffset) < pos.height)) {
-          //Find the one closest the viewport top or the page bottom if it's reached
-          if(!toBeActive || toBeActive[compareProperty] < pos[compareProperty]) {
+        if(pos.top + spy.offset - containerOffset < 20 && (pos.top*-1 + containerOffset) < pos.height) {
+          if(!toBeActive || toBeActive.top < pos.top) {
             toBeActive = {
+              top: pos.top,
               spy: spy
             };
-            toBeActive[compareProperty] = pos[compareProperty];
           }
         }
       }
-
       if(toBeActive) {
         toBeActive = toBeActive.spy;
       }
@@ -357,7 +345,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
   };
 
   var getContextForSpy = function(spy) {
-    var context, contextId, scope = spy.$scope;
+    var context, contextId, scope = spy.$element.scope();
     if(scope) {
       return getContextForScope(scope);
     }
@@ -388,7 +376,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
       if(context.container) {
         context.container.off('scroll', context.handler);
       }
-      context.container = scrollContainerAPI.getContainer(spy.$scope);
+      context.container = scrollContainerAPI.getContainer(spy.$element.scope());
       context.container.on('scroll', context.handler).triggerHandler('scroll');
     }
   };
@@ -450,8 +438,8 @@ angular.module('duScroll.scrollContainerAPI', [])
   };
 
   return {
-    getContainerId:   getContainerId,
-    getContainer:     getContainer,
+    getContainerId:   getContainerId, 
+    getContainer:     getContainer, 
     setContainer:     setContainer,
     removeContainer:  removeContainer
   };
@@ -465,13 +453,11 @@ angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scr
   return {
     link : function($scope, $element, $attr) {
       $element.on('click', function(e) {
-        if((!$attr.href || $attr.href.indexOf('#') === -1) && $attr.duSmoothScroll === '') return;
+        if(!$attr.href || $attr.href.indexOf('#') === -1) return;
 
-        var id = $attr.href ? $attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1) : $attr.duSmoothScroll;
-
-        var target = document.getElementById(id) || document.getElementsByName(id)[0];
+        var target = document.getElementById($attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1));
         if(!target || !target.getBoundingClientRect) return;
-
+        
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
@@ -480,8 +466,8 @@ angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scr
         var container = scrollContainerAPI.getContainer($scope);
 
         container.duScrollToElement(
-          angular.element(target),
-          isNaN(offset) ? 0 : offset,
+          angular.element(target), 
+          isNaN(offset) ? 0 : offset, 
           isNaN(duration) ? 0 : duration
         );
       });
@@ -540,20 +526,19 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
 .directive('duScrollspy', ["spyAPI", "duScrollOffset", "$timeout", "$rootScope", function(spyAPI, duScrollOffset, $timeout, $rootScope) {
   'use strict';
 
-  var Spy = function(targetElementOrId, $scope, $element, offset) {
+  var Spy = function(targetElementOrId, $element, offset) {
     if(angular.isElement(targetElementOrId)) {
       this.target = targetElementOrId;
     } else if(angular.isString(targetElementOrId)) {
       this.targetId = targetElementOrId;
     }
-    this.$scope = $scope;
     this.$element = $element;
     this.offset = offset;
   };
 
   Spy.prototype.getTargetElement = function() {
     if (!this.target && this.targetId) {
-      this.target = document.getElementById(this.targetId) || document.getElementsByName(this.targetId)[0];
+      this.target = document.getElementById(this.targetId);
     }
     return this.target;
   };
@@ -580,23 +565,20 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
         targetId = href.replace(/.*(?=#[^\s]+$)/, '').substring(1);
       } else if($attr.duScrollspy) {
         targetId = $attr.duScrollspy;
-      } else if($attr.duSmoothScroll) {
-        targetId = $attr.duSmoothScroll;
       }
       if(!targetId) return;
 
       // Run this in the next execution loop so that the scroll context has a chance
       // to initialize
       $timeout(function() {
-        var spy = new Spy(targetId, $scope, $element, -($attr.offset ? parseInt($attr.offset, 10) : duScrollOffset));
+        var spy = new Spy(targetId, $element, -($attr.offset ? parseInt($attr.offset, 10) : duScrollOffset));
         spyAPI.addSpy(spy);
 
-        $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
-        var deregisterOnStateChange = $rootScope.$on('$stateChangeSuccess', spy.flushTargetCache.bind(spy));
         $scope.$on('$destroy', function() {
           spyAPI.removeSpy(spy);
-          deregisterOnStateChange();
         });
+        $scope.$on('$locationChangeSuccess', spy.flushTargetCache.bind(spy));
+        $rootScope.$on('$stateChangeSuccess', spy.flushTargetCache.bind(spy));
       }, 0, false);
     }
   };
