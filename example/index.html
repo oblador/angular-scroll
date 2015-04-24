@@ -112,7 +112,7 @@
     <p>Shoulder cow tenderloin chuck, pork chop jerky doner leberkas. Chuck sausage hamburger, kevin beef pork chop pork shoulder ground round ball tip turducken flank. Bresaola tri-tip meatloaf, salami venison tail pig shank shankle jowl sausage brisket cow biltong turducken. Swine turducken hamburger ball tip short loin prosciutto kevin jowl tri-tip. Doner meatloaf pork brisket.</p>
   </section>
   <footer>
-    <button ng-click="toTheTop()">Take me back!</button> or <button ng-click="toSection2()">To section 2</button>
+    <button ng-click="toTheTop()">Take me back!</button> or <button ng-click="toSection3()">To section 3</button>
   </footer>
 </div>
 
@@ -126,9 +126,9 @@ angular.module('myApp', ['duScroll']).
         console && console.log('You just scrolled to the top!');
       });
     }
-    var section2 = angular.element(document.getElementById('section-2'));
-    $scope.toSection2 = function() {
-      $document.scrollToElementAnimated(section2);
+    var section3 = angular.element(document.getElementById('section-3'));
+    $scope.toSection3 = function() {
+      $document.scrollToElementAnimated(section3);
     }
   }
 ).value('duScrollOffset', 30);
