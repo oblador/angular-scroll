@@ -36,6 +36,18 @@ describe('duScroll', function() {
               expect(page.activeLinks.count()).toBe(0);
             });
           });
+          it('should support elements with name instead of id attribute', function() {
+            page.scrollToSection(1).then(function() {
+              expect(page.activeLinks.count()).toBe(1);
+              expect(page.links.get(1).getAttribute('class')).toBe('active');
+            });
+          });
+          it('should support du-smooth-scroll attribute instead of href', function() {
+            page.scrollToSection(2).then(function() {
+              expect(page.activeLinks.count()).toBe(1);
+              expect(page.links.get(2).getAttribute('class')).toBe('active');
+            });
+          });
         }
 
         it('should cancel all animations except the last one', function() {
