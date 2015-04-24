@@ -1,6 +1,6 @@
 {
   "name": "angular-scroll",
-  "version": "0.6.5",
+  "version": "0.7.0",
   "main": "angular-scroll.js",
   "ignore": [
     "**/.*",
