@@ -15,7 +15,7 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
 
   Spy.prototype.getTargetElement = function() {
     if (!this.target && this.targetId) {
-      this.target = document.getElementById(this.targetId) || document.getElementsByName(this.targetId)[0]
+      this.target = document.getElementById(this.targetId) || document.getElementsByName(this.targetId)[0];
     }
     return this.target;
   };
