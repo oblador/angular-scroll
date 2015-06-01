@@ -227,6 +227,13 @@ To change default offset (in pixels) for the `du-smooth-scroll` directive:
 angular.module('myApp', ['duScroll']).value('duScrollOffset', 30);
 ```
 
+### When to cancel scroll animation
+Specify on which events on the container the scroll animation should be cancelled by modifying `duScrollCancelOnEvents`, set to `false` to disable entirely as shown below. Defaults to `scroll mousedown mousewheel touchmove keydown`.
+
+```js
+angular.module('myApp', ['duScroll']).value('duScrollCancelOnEvents', false);
+```
+
 ### Bottom spy
 To make the last `du-scrollspy` link active when scroll reaches page/container bottom:
 

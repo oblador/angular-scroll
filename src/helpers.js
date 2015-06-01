@@ -1,5 +1,5 @@
 angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
-.run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing, duScrollDuration, duScrollOffset) {
+.run(function($window, $q, cancelAnimation, requestAnimation, duScrollEasing, duScrollDuration, duScrollOffset, duScrollCancelOnEvents) {
   'use strict';
 
   var proto = {};
@@ -47,10 +47,11 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     var startTime = null, progress = 0;
     var el = this;
 
-    var cancelOnEvents = 'scroll mousedown mousewheel touchmove keydown';
     var cancelScrollAnimation = function($event) {
       if (!$event || (progress && $event.which > 0)) {
-        el.unbind(cancelOnEvents, cancelScrollAnimation);
+        if(duScrollCancelOnEvents) {
+          el.unbind(duScrollCancelOnEvents, cancelScrollAnimation);
+        }
         cancelAnimation(scrollAnimation);
         deferred.reject();
         scrollAnimation = null;
@@ -85,7 +86,9 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
       if(percent < 1) {
         scrollAnimation = requestAnimation(animationStep);
       } else {
-        el.unbind(cancelOnEvents, cancelScrollAnimation);
+        if(duScrollCancelOnEvents) {
+          el.unbind(duScrollCancelOnEvents, cancelScrollAnimation);
+        }
         scrollAnimation = null;
         deferred.resolve();
       }
@@ -94,7 +97,9 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     //Fix random mobile safari bug when scrolling to top by hitting status bar
     el.duScrollTo(startLeft, startTop);
 
-    el.bind(cancelOnEvents, cancelScrollAnimation);
+    if(duScrollCancelOnEvents) {
+      el.bind(duScrollCancelOnEvents, cancelScrollAnimation);
+    }
 
     scrollAnimation = requestAnimation(animationStep);
     return deferred.promise;
