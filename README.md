@@ -248,8 +248,8 @@ The `duScrollspy` directive fires the global events `duScrollspy:becameActive` a
 
 ```js
 angular.module('myApp', ['duScroll']).
-  run(function($rootScope, $location) {
-    if(!history || !history.replaceState) {
+  run(function($rootScope) {
+    if(!window.history || !history.replaceState) {
       return;
     }
     $rootScope.$on('duScrollspy:becameActive', function($event, $element){
