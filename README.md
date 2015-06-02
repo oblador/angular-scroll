@@ -23,7 +23,7 @@ You can also download the [production version](https://raw.github.com/oblador/an
 If you prefer a CDN hosted version (which might speed up your load times), check out [cdnjs.com/libraries/angular-scroll](https://cdnjs.com/libraries/angular-scroll).
 
 
-Don't forget to add `duScroll` to your module dependencies. 
+Don't forget to add `duScroll` to your module dependencies.
 
 `angular.element` Scroll API
 ----------------------------
@@ -37,19 +37,19 @@ Scrolls the element/window to the specified left/top position. If `duration` is 
 Alias of `.scrollToElement`.
 
 #### `.scrollToElement( element [, offset, [, duration [, easing ] ] ] )`
-Scrolls to the specified element, if `offset` is passed it will be subtracted from the elements position which is good if one uses floating menus. 
+Scrolls to the specified element, if `offset` is passed it will be subtracted from the elements position which is good if one uses floating menus.
 
 #### `.scrollToElementAnimated( element [, offset, [, duration [, easing ] ] ] )`
-Convenience function. Works exactly the same as `scrollToElement` but uses the default values from `duScrollOffset`, `duScrollDuration` and `duScrollEasing` unless otherwise specified. 
+Convenience function. Works exactly the same as `scrollToElement` but uses the default values from `duScrollOffset`, `duScrollDuration` and `duScrollEasing` unless otherwise specified.
 
 #### `.scrollTop|scrollLeft( )`
-Returns current scroll position. 
+Returns current scroll position.
 
-#### `.scrollTop|scrollLeft( top [, duration [, easing ] ] )` 
-Scrolls to specified position in either axis, with optional animation. 
+#### `.scrollTop|scrollLeft( top [, duration [, easing ] ] )`
+Scrolls to specified position in either axis, with optional animation.
 
-#### `.scrollTopAnimated|scrollLeftAnimated( top [, duration [, easing ] ] )` 
-Convenience function like `scrollToElementAnimated` but for `scrollTop`/`scrollLeft`. 
+#### `.scrollTopAnimated|scrollLeftAnimated( top [, duration [, easing ] ] )`
+Convenience function like `scrollToElementAnimated` but for `scrollTop`/`scrollLeft`.
 
 #### Promises
 Animated scrolling returns a `$q` promise, it will resolve when the scrolling has finished or be rejected if cancelled (by starting another scroll animation before it finished).
@@ -68,7 +68,7 @@ angular.module('myApp', ['duScroll']).
 
     var offset = 30; //pixels; adjust for floating menu, context etc
     //Scroll to #some-id with 30 px "padding"
-    //Note: Use this in a directive, not with document.getElementById 
+    //Note: Use this in a directive, not with document.getElementById
     var someElement = angular.element(document.getElementById('some-id'));
     $document.scrollToElement(someElement, offset, duration);
   }
@@ -97,7 +97,7 @@ Directives
 ----------
 
 ### `du-smooth-scroll`
-Provides smooth anchor scrolling. 
+Provides smooth anchor scrolling.
 ```html
 <a href="#anchor" du-smooth-scroll>Scroll it!</a>
 ```
@@ -120,7 +120,7 @@ or together with Bootstrap
 ```
 
 ### `du-spy-context`
-Enables multiple sets of spies on the same target element. Takes optional `offset` attribute to 
+Enables multiple sets of spies on the same target element. Takes optional `offset` attribute to
 
 ```html
 <ul du-spy-context class="nav navbar-nav">
@@ -169,7 +169,7 @@ The directives play well together, try [the demo](http://oblador.github.io/angul
 Observing Scroll Position
 -------------------------
 
-**NOTE:** the `$duScrollChanged` event and the `scrollPosition` service are deprecated. Use `angular.element().on()` together with `.scrollTop()` instead. 
+**NOTE:** the `$duScrollChanged` event and the `scrollPosition` service are deprecated. Use `angular.element().on()` together with `.scrollTop()` instead.
 
 ```js
 angular.module('myApp', ['duScroll']).
@@ -241,15 +241,22 @@ To make the last `du-scrollspy` link active when scroll reaches page/container b
 angular.module('myApp', ['duScroll']).value('duScrollBottomSpy', true);
 ```
 
+### Active class
+Specify the active class name to apply to a link when it is active, default is `active`.
+
+```js
+angular.module('myApp', ['duScroll']).value('duScrollActiveClass', 'custom-class');
+```
+
 Events
 ------
 
-The `duScrollspy` directive fires the global events `duScrollspy:becameActive` and `duScrollspy:becameInactive` with an angular.element wrapped element as first argument. This is nice to have if you want the URL bar to reflect where on the page the visitor are, like this: 
+The `duScrollspy` directive fires the global events `duScrollspy:becameActive` and `duScrollspy:becameInactive` with an angular.element wrapped element as first argument. This is nice to have if you want the URL bar to reflect where on the page the visitor are, like this:
 
 ```js
 angular.module('myApp', ['duScroll']).
-  run(function($rootScope, $location) {
-    if(!history || !history.replaceState) {
+  run(function($rootScope) {
+    if(!window.history || !history.replaceState) {
       return;
     }
     $rootScope.$on('duScrollspy:becameActive', function($event, $element){
@@ -266,6 +273,8 @@ angular.module('myApp', ['duScroll']).
 Building
 --------
 
+    $ npm install
+    $ bower install
     $ gulp
 
 Tests
