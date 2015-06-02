@@ -248,16 +248,15 @@ The `duScrollspy` directive fires the global events `duScrollspy:becameActive` a
 
 ```js
 angular.module('myApp', ['duScroll']).
-  config(function($locationProvider) {
-    $locationProvider.html5Mode(true);
-  }).
-  run(function($rootScope, $location){
+  run(function($rootScope, $location) {
+    if(!history || !history.replaceState) {
+      return;
+    }
     $rootScope.$on('duScrollspy:becameActive', function($event, $element){
       //Automaticly update location
       var hash = $element.prop('hash');
-      if(hash) {
-        $location.hash(hash.substr(1)).replace();
-        $rootScope.$apply();
+      if (hash) {
+        history.replaceState(null, null, hash);
       }
     });
   });
