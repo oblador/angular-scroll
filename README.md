@@ -241,6 +241,13 @@ To make the last `du-scrollspy` link active when scroll reaches page/container b
 angular.module('myApp', ['duScroll']).value('duScrollBottomSpy', true);
 ```
 
+### Active class
+Specify the active class name to apply to a link when it is active, default is `active`.
+
+```js
+angular.module('myApp', ['duScroll']).value('duScrollActiveClass', 'custom-class');
+```
+
 Events
 ------
 
@@ -266,6 +273,8 @@ angular.module('myApp', ['duScroll']).
 Building
 --------
 
+    $ npm install
+    $ bower install
     $ gulp
 
 Tests
