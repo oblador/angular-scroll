@@ -30,4 +30,6 @@ angular.module('duScroll', [
   //Which events on the container (such as body) should cancel scroll animations
   .value('duScrollCancelOnEvents', 'scroll mousedown mousewheel touchmove keydown')
   //Whether or not to activate the last scrollspy, when page/container bottom is reached
-  .value('duScrollBottomSpy', false);
+  .value('duScrollBottomSpy', false)
+  //Active class name
+  .value('duScrollActiveClass', 'active');
