@@ -18,7 +18,7 @@ Install
 
     $ npm install angular-scroll
 
-You can also download the [production version](https://raw.github.com/oblador/angular-scroll/master/angular-scroll.min.js)or the [development version](https://raw.github.com/oblador/angular-scroll/master/angular-scroll.js).
+You can also download the [production version](https://raw.github.com/oblador/angular-scroll/master/angular-scroll.min.js) or the [development version](https://raw.github.com/oblador/angular-scroll/master/angular-scroll.js).
 
 If you prefer a CDN hosted version (which might speed up your load times), check out [cdnjs.com/libraries/angular-scroll](https://cdnjs.com/libraries/angular-scroll).
 
