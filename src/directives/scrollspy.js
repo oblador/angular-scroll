@@ -49,7 +49,7 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
 
       // Run this in the next execution loop so that the scroll context has a chance
       // to initialize
-      $timeout(function() {
+      var timeoutPromise = $timeout(function() {
         var spy = new Spy(targetId, $scope, $element, -($attr.offset ? parseInt($attr.offset, 10) : duScrollOffset));
         spyAPI.addSpy(spy);
 
@@ -60,6 +60,7 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
           deregisterOnStateChange();
         });
       }, 0, false);
+      $scope.$on('$destroy', function() {$timeout.cancel(timeoutPromise);});
     }
   };
 });
