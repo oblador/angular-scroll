@@ -1,6 +1,6 @@
 {
   "name": "angular-scroll",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Scrollspy, animated scrollTo and scroll events",
   "keywords": [
     "angular",

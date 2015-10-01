@@ -297,11 +297,19 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
       if(currentlyActive === toBeActive || (duScrollGreedy && !toBeActive)) return;
       if(currentlyActive) {
         currentlyActive.$element.removeClass(duScrollActiveClass);
-        $rootScope.$broadcast('duScrollspy:becameInactive', currentlyActive.$element);
+        $rootScope.$broadcast(
+          'duScrollspy:becameInactive',
+          currentlyActive.$element,
+          angular.element(currentlyActive.getTargetElement())
+        );
       }
       if(toBeActive) {
         toBeActive.$element.addClass(duScrollActiveClass);
-        $rootScope.$broadcast('duScrollspy:becameActive', toBeActive.$element);
+        $rootScope.$broadcast(
+          'duScrollspy:becameActive',
+          toBeActive.$element,
+          angular.element(toBeActive.getTargetElement())
+        );
       }
       context.currentlyActive = toBeActive;
     };
@@ -596,7 +604,7 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
 
       // Run this in the next execution loop so that the scroll context has a chance
       // to initialize
-      $timeout(function() {
+      var timeoutPromise = $timeout(function() {
         var spy = new Spy(targetId, $scope, $element, -($attr.offset ? parseInt($attr.offset, 10) : duScrollOffset));
         spyAPI.addSpy(spy);
 
@@ -607,6 +615,7 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
           deregisterOnStateChange();
         });
       }, 0, false);
+      $scope.$on('$destroy', function() {$timeout.cancel(timeoutPromise);});
     }
   };
 }]);
