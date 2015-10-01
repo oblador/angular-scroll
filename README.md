@@ -251,7 +251,7 @@ angular.module('myApp', ['duScroll']).value('duScrollActiveClass', 'custom-class
 Events
 ------
 
-The `duScrollspy` directive fires the global events `duScrollspy:becameActive` and `duScrollspy:becameInactive` with an angular.element wrapped element as first argument. This is nice to have if you want the URL bar to reflect where on the page the visitor are, like this: 
+The `duScrollspy` directive fires the global events `duScrollspy:becameActive` and `duScrollspy:becameInactive` with an angular.element wrapped element as first argument and the element being spied on as second. This is nice to have if you want the URL bar to reflect where on the page the visitor are, like this: 
 
 ```js
 angular.module('myApp', ['duScroll']).
@@ -259,7 +259,7 @@ angular.module('myApp', ['duScroll']).
     if(!window.history || !history.replaceState) {
       return;
     }
-    $rootScope.$on('duScrollspy:becameActive', function($event, $element){
+    $rootScope.$on('duScrollspy:becameActive', function($event, $element, $target){
       //Automaticly update location
       var hash = $element.prop('hash');
       if (hash) {
