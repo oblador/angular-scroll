@@ -10,7 +10,7 @@ var duScrollDefaultEasing = function (x) {
   return 1-Math.pow((1-x)*2, 2)/2;
 };
 
-angular.module('duScroll', [
+var duScroll = angular.module('duScroll', [
   'duScroll.scrollspy',
   'duScroll.smoothScroll',
   'duScroll.scrollContainer',
@@ -33,6 +33,10 @@ angular.module('duScroll', [
   .value('duScrollBottomSpy', false)
   //Active class name
   .value('duScrollActiveClass', 'active');
+
+if (typeof module !== 'undefined' && module && module.exports) {
+  module.exports = duScroll;
+}
 
 
 angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
@@ -413,6 +417,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
   var removeSpy = function(spy) {
     var context = getContextForSpy(spy);
     if(spy === context.currentlyActive) {
+      $rootScope.$broadcast('duScrollspy:becameInactive', context.currentlyActive.$element);
       context.currentlyActive = null;
     }
     var i = context.spies.indexOf(spy);
