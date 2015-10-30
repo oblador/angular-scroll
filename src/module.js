@@ -10,7 +10,7 @@ var duScrollDefaultEasing = function (x) {
   return 1-Math.pow((1-x)*2, 2)/2;
 };
 
-angular.module('duScroll', [
+var duScroll = angular.module('duScroll', [
   'duScroll.scrollspy',
   'duScroll.smoothScroll',
   'duScroll.scrollContainer',
@@ -33,3 +33,7 @@ angular.module('duScroll', [
   .value('duScrollBottomSpy', false)
   //Active class name
   .value('duScrollActiveClass', 'active');
+
+if (typeof module !== 'undefined' && module && module.exports) {
+  module.exports = duScroll;
+}
