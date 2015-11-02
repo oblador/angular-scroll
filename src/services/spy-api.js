@@ -169,7 +169,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
     if(i !== -1) {
       context.spies.splice(i, 1);
     }
-		spy.$element = null;
+		spy.$element = context.container = null;
   };
 
   return {
