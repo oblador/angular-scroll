@@ -9,7 +9,7 @@
     "scrollTo",
     "scrolling"
   ],
-  "main": "angular-scroll.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git://git@github.com:oblador/angular-scroll.git"
