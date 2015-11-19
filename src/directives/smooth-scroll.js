@@ -1,9 +1,11 @@
 angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scrollContainerAPI'])
-.directive('duSmoothScroll', function(duScrollDuration, duScrollOffset, scrollContainerAPI) {
+.directive('duSmoothScroll', function($timeout, duScrollDuration, duScrollDelay, duScrollOffset, scrollContainerAPI) {
   'use strict';
 
   return {
     link : function($scope, $element, $attr) {
+      var delayTimeout;
+
       $element.on('click', function(e) {
         if((!$attr.href || $attr.href.indexOf('#') === -1) && $attr.duSmoothScroll === '') return;
 
@@ -17,13 +19,24 @@ angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scr
 
         var offset    = $attr.offset ? parseInt($attr.offset, 10) : duScrollOffset;
         var duration  = $attr.duration ? parseInt($attr.duration, 10) : duScrollDuration;
+        var delay  = $attr.delay ? parseInt($attr.delay, 10) : duScrollDelay;
         var container = scrollContainerAPI.getContainer($scope);
 
-        container.duScrollToElement(
-          angular.element(target),
-          isNaN(offset) ? 0 : offset,
-          isNaN(duration) ? 0 : duration
-        );
+        var scrollFn = function() {
+          container.duScrollToElement(
+            angular.element(target),
+            isNaN(offset) ? 0 : offset,
+            isNaN(duration) ? 0 : duration
+          );
+        }
+
+        if (delay) {
+          $timeout.cancel(delayTimeout);
+          delayTimeout = $timeout(scrollFn, delay);
+
+        } else {
+          scrollFn();
+        }
       });
     }
   };

@@ -19,6 +19,8 @@ var duScroll = angular.module('duScroll', [
 ])
   //Default animation duration for smoothScroll directive
   .value('duScrollDuration', 350)
+  //Default animation delay for smoothScroll directive
+  .value('duScrollDelay', 0)
   //Scrollspy debounce interval, set to 0 to disable
   .value('duScrollSpyWait', 100)
   //Wether or not multiple scrollspies can be active at once
