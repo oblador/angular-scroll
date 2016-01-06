@@ -28,7 +28,7 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     }
     var el = unwrap(this);
     if(isDocument(el)) {
-      return $window.duScrollTo(left, top);
+      return angular.element($window).duScrollTo(left, top);
     }
     el.scrollLeft = left;
     el.scrollTop = top;
