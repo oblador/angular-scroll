@@ -213,6 +213,13 @@ angular.module('myApp', ['duScroll']).value('duScrollEasing', invertedEasingFunc
 
 You can also pass a custom easing function as the fourth argument in `scrollTo`.
 
+### Debounce Scroll Events
+Set the `duScrollSpyWait` value in milliseconds to debounce the handler and prevent it from triggering frequent events and increase performance for large pages and/or navigations with expanding nodes.
+
+```js
+angular.module('myApp', ['duScroll']).value('duScrollSpyWait', 1000);
+```
+
 ### Greedy option
 Set the `duScrollGreedy` value to `true` if the elements you are observing are not wrapping the whole section you want to observe, but merely the first one in the section (such as headlines).
 
