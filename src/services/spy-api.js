@@ -53,6 +53,7 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
           angular.element(currentlyActive.getTargetElement())
         );
       }
+      if(toBeActive && !toBeActive.$element) toBeActive = undefined;
       if(toBeActive) {
         toBeActive.$element.addClass(duScrollActiveClass);
         $rootScope.$broadcast(
