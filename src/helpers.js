@@ -79,7 +79,7 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
       progress = timestamp - startTime;
       var percent = (progress >= duration ? 1 : easing(progress/duration));
 
-      el.scrollTo(
+      el.duScrollTo(
         startLeft + Math.ceil(deltaLeft * percent),
         startTop + Math.ceil(deltaTop * percent)
       );
