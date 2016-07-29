@@ -492,6 +492,10 @@ angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scr
 
         var id = $attr.href ? $attr.href.replace(/.*(?=#[^\s]+$)/, '').substring(1) : $attr.duSmoothScroll;
 
+        $attr.$observe('duSmoothScroll', function(value){
+          id = value;
+        });
+        
         var target = document.getElementById(id) || document.getElementsByName(id)[0];
         if(!target || !target.getBoundingClientRect) return;
 
