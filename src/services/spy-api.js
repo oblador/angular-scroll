@@ -168,13 +168,15 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
 
   var removeSpy = function(spy) {
     var context = getContextForSpy(spy);
-    if(spy === context.currentlyActive) {
-      $rootScope.$broadcast('duScrollspy:becameInactive', context.currentlyActive.$element);
-      context.currentlyActive = null;
-    }
-    var i = context.spies.indexOf(spy);
-    if(i !== -1) {
-      context.spies.splice(i, 1);
+    if(context) {
+      if(spy === context.currentlyActive) {
+        $rootScope.$broadcast('duScrollspy:becameInactive', context.currentlyActive.$element);
+        context.currentlyActive = null;
+      }
+      var i = context.spies.indexOf(spy);
+      if(i !== -1) {
+        context.spies.splice(i, 1);
+      }
     }
 		spy.$element = null;
   };
