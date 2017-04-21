@@ -102,7 +102,7 @@ Provides smooth anchor scrolling.
 <a href="#anchor" du-smooth-scroll>Scroll it!</a>
 ```
 
-If you for some reason you do not want to use the `href` attribute as fallback, just use the `du-smooth-scroll` attribute instead but without leading #. Example: `<a du-smooth-scroll="anchor">`.
+If you, for some reason, do not want to use the `href` attribute as fallback, just use the `du-smooth-scroll` attribute instead but without leading #. Example: `<a du-smooth-scroll="anchor">`.
 
 ### `du-scrollspy`
 Observes whether the target element is at the top of the viewport (or container) and adds an `active` class if so. Takes optional `offset` and `duration` attributes which is passed on to `.scrollTo`,
