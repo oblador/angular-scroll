@@ -113,6 +113,10 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     }
 
     var animationStep = function(timestamp) {
+      if (typeof timestamp === 'undefined') {
+        timestamp = new Date().getTime();
+      }
+
       if (startTime === null) {
         startTime = timestamp;
       }
