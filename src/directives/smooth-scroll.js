@@ -24,6 +24,8 @@ angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scr
           isNaN(offset) ? 0 : offset,
           isNaN(duration) ? 0 : duration
         );
+        
+        window.location = '#' + id;
       });
     }
   };
