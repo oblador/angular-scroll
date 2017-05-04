@@ -34,12 +34,14 @@ angular.module('duScroll.scrollspy', ['duScroll.spyAPI'])
   };
 
   return {
+    scope: { duScrollspy: '=' },
     link: function ($scope, $element, $attr) {
       var href = $attr.ngHref || $attr.href;
       var targetId;
-
       if (href && href.indexOf('#') !== -1) {
         targetId = href.replace(/.*(?=#[^\s]+$)/, '').substring(1);
+      } else if($scope.duScrollspy) {
+        targetId = $scope.duScrollspy;
       } else if($attr.duScrollspy) {
         targetId = $attr.duScrollspy;
       } else if($attr.duSmoothScroll) {
