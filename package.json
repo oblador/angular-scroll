@@ -1,6 +1,6 @@
 {
   "name": "angular-scroll",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Scrollspy, animated scrollTo and scroll events",
   "keywords": [
     "angular",
@@ -26,7 +26,10 @@
     "update-webdriver": "node_modules/protractor/bin/webdriver-manager update",
     "protractor": "node_modules/protractor/bin/protractor test/protractor.conf.js"
   },
-  "author": "Joel Arvidsson",
+  "author": {
+    "name": "Joel Arvidsson",
+    "email": "joel@oblador.se"
+  },
   "license": "MIT",
   "devDependencies": {
     "gulp": "^3.8.11",
