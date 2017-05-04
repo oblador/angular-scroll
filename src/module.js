@@ -34,6 +34,8 @@ var duScroll = angular.module('duScroll', [
   .value('duScrollCancelOnEvents', 'scroll mousedown mousewheel touchmove keydown')
   //Whether or not to activate the last scrollspy, when page/container bottom is reached
   .value('duScrollBottomSpy', false)
+  //Whether or not to activate the first scrollspy by default if at top of page
+  .value('duScrollFirstTopSpy', false)
   //Active class name
   .value('duScrollActiveClass', 'active');
 

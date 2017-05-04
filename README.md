@@ -248,6 +248,13 @@ To make the last `du-scrollspy` link active when scroll reaches page/container b
 angular.module('myApp', ['duScroll']).value('duScrollBottomSpy', true);
 ```
 
+### Top spy
+To make the first `du-scrollspy` link active when it is the highest on the page, even if below viewport top:
+
+```js
+angular.module('myApp', ['duScroll']).value('duScrollFirstTopSpy', true);
+```
+
 ### Active class
 Specify the active class name to apply to a link when it is active, default is `active`.
 
