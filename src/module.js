@@ -35,7 +35,12 @@ var duScroll = angular.module('duScroll', [
   //Whether or not to activate the last scrollspy, when page/container bottom is reached
   .value('duScrollBottomSpy', false)
   //Active class name
-  .value('duScrollActiveClass', 'active');
+  .value('duScrollActiveClass', 'active')
+  //Whether or not to stopPropagation on the click event
+  .value('duStopPropagation', true)
+  //Whether or not to preventDefault on the click event
+  .value('duPreventDefault', true);
+
 
 if (typeof module !== 'undefined' && module && module.exports) {
   module.exports = duScroll;

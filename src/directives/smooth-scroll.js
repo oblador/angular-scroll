@@ -1,5 +1,5 @@
 angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scrollContainerAPI'])
-.directive('duSmoothScroll', function(duScrollDuration, duScrollOffset, scrollContainerAPI) {
+.directive('duSmoothScroll', function(duScrollDuration, duScrollOffset, duStopPropagation, duPreventDefault, scrollContainerAPI) {
   'use strict';
 
   return {
@@ -12,8 +12,8 @@ angular.module('duScroll.smoothScroll', ['duScroll.scrollHelpers', 'duScroll.scr
         var target = document.getElementById(id) || document.getElementsByName(id)[0];
         if(!target || !target.getBoundingClientRect) return;
 
-        if (e.stopPropagation) e.stopPropagation();
-        if (e.preventDefault) e.preventDefault();
+        if (duStopPropagation && e.stopPropagation) e.stopPropagation();
+        if (duPreventDefault && e.preventDefault) e.preventDefault();
 
         var offset    = $attr.offset ? parseInt($attr.offset, 10) : duScrollOffset;
         var duration  = $attr.duration ? parseInt($attr.duration, 10) : duScrollDuration;

@@ -255,6 +255,16 @@ Specify the active class name to apply to a link when it is active, default is `
 angular.module('myApp', ['duScroll']).value('duScrollActiveClass', 'custom-class');
 ```
 
+### stopPropagation and preventDefault
+By default `duSmoothScroll` will call `stopPropagation` and `preventDefault` on the click event. To prevent this set these values to `false`. 
+
+```js
+angular.module('myApp', ['duScroll'])
+    .value('duStopPropagation', false)
+    .value('duPreventDefault', false);
+```
+
+
 Events
 ------
 
