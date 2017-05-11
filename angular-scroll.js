@@ -72,7 +72,7 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     }
     var el = unwrap(this);
     if(isDocument(el)) {
-      return angular.element($window).duScrollTo(left, top);
+      return $window.scrollTo(left, top);
     }
     el.scrollLeft = left;
     el.scrollTop = top;
@@ -123,7 +123,7 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
       progress = timestamp - startTime;
       var percent = (progress >= duration ? 1 : easing(progress/duration));
 
-      el.duScrollTo(
+      el.scrollTo(
         startLeft + Math.ceil(deltaLeft * percent),
         startTop + Math.ceil(deltaTop * percent)
       );
