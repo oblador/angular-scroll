@@ -131,7 +131,7 @@ Enables multiple sets of spies on the same target element. Takes optional `offse
 </ul>
 ```
 ### `du-scroll-container`
-Modifies behavior of `du-scrollspy` and `du-smooth-scroll` to observe/scroll within and element instead of the window/document. Good for modals/elements with `overflow: auto/scroll`.
+Modifies behavior of `du-scrollspy` and `du-smooth-scroll` to observe/scroll within an element instead of the window/document. Good for modals/elements with `overflow: auto/scroll`.
 
 ```html
 <div du-scroll-container>
