@@ -47,8 +47,8 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     var startTime = null, progress = 0;
     var el = this;
 
-    var cancelScrollAnimation = function($event) {
-      if (!$event || (progress && $event.which > 0)) {
+    var cancelScrollAnimation = function($event){
+      if(!$event || (progress && ($event.which > 0 || $event.type === 'wheel' || $event.type === 'mousedown' || $event.type === 'mousewheel'))){
         if(duScrollCancelOnEvents) {
           el.unbind(duScrollCancelOnEvents, cancelScrollAnimation);
         }
@@ -63,7 +63,18 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     }
     deferred = $q.defer();
 
-    if(duration === 0 || (!deltaLeft && !deltaTop)) {
+    var elem = unwrap(el);
+    var isScrollBottom = false;
+    var scrollY;
+    if(isDocument(elem)){
+        scrollY = $window.scrollY || elem.documentElement.scrollTop || elem.body.scrollTop;
+        isScrollBottom = elem.documentElement.scrollHeight - scrollY === elem.documentElement.clientHeight;
+    }
+    else if(isElement(elem)){
+        isScrollBottom = elem.scrollHeight - elem.scrollTop === elem.clientHeight;
+    }
+
+    if(duration === 0 || (!deltaLeft && (!deltaTop || (deltaTop > 0 && isScrollBottom) ))){
       if(duration === 0) {
         el.duScrollTo(left, top);
       }
