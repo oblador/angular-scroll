@@ -31,7 +31,7 @@ var duScroll = angular.module('duScroll', [
   //Default easing function for scroll animation
   .value('duScrollEasing', duScrollDefaultEasing)
   //Which events on the container (such as body) should cancel scroll animations
-  .value('duScrollCancelOnEvents', 'scroll mousedown mousewheel touchmove keydown')
+  .value('duScrollCancelOnEvents', 'scroll mousedown wheel DOMMouseScroll mousewheel touchmove keydown')
   //Whether or not to activate the last scrollspy, when page/container bottom is reached
   .value('duScrollBottomSpy', false)
   //Active class name
@@ -91,8 +91,8 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     var startTime = null, progress = 0;
     var el = this;
 
-    var cancelScrollAnimation = function($event) {
-      if (!$event || (progress && $event.which > 0)) {
+    var cancelScrollAnimation = function($event){
+      if(!$event || (progress && ($event.which > 0 || $event.type === 'wheel' || $event.type === 'mousedown' || $event.type === 'mousewheel'))){
         if(duScrollCancelOnEvents) {
           el.unbind(duScrollCancelOnEvents, cancelScrollAnimation);
         }
@@ -107,7 +107,18 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     }
     deferred = $q.defer();
 
-    if(duration === 0 || (!deltaLeft && !deltaTop)) {
+    var elem = unwrap(el);
+    var isScrollBottom = false;
+    var scrollY;
+    if(isDocument(elem)){
+        scrollY = $window.scrollY || elem.documentElement.scrollTop || elem.body.scrollTop;
+        isScrollBottom = elem.documentElement.scrollHeight - scrollY === elem.documentElement.clientHeight;
+    }
+    else if(isElement(elem)){
+        isScrollBottom = elem.scrollHeight - elem.scrollTop === elem.clientHeight;
+    }
+
+    if(duration === 0 || (!deltaLeft && (!deltaTop || (deltaTop > 0 && isScrollBottom) ))){
       if(duration === 0) {
         el.duScrollTo(left, top);
       }
@@ -361,15 +372,18 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
   };
 
   var destroyContext = function($scope) {
-    var id = $scope.$id;
-    var context = contexts[id], container = context.container;
-    if(context.intervalPromise) {
-      $interval.cancel(context.intervalPromise);
-    }
-    if(container) {
-      container.off('scroll', context.handler);
-    }
-    delete contexts[id];
+      var id = $scope.$id;
+      var context = contexts[id],
+          container = context && context.container,
+          intervalPromise = context && context.intervalPromise;
+
+      if(intervalPromise){
+          $interval.cancel(context.intervalPromise);
+      }
+      if(container){
+          container.off('scroll', context.handler);
+      }
+      delete contexts[id];
   };
 
   var defaultContextId = createContext($rootScope);

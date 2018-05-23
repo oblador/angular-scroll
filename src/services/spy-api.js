@@ -103,15 +103,18 @@ angular.module('duScroll.spyAPI', ['duScroll.scrollContainerAPI'])
   };
 
   var destroyContext = function($scope) {
-    var id = $scope.$id;
-    var context = contexts[id], container = context.container;
-    if(context.intervalPromise) {
-      $interval.cancel(context.intervalPromise);
-    }
-    if(container) {
-      container.off('scroll', context.handler);
-    }
-    delete contexts[id];
+      var id = $scope.$id;
+      var context = contexts[id],
+          container = context && context.container,
+          intervalPromise = context && context.intervalPromise;
+
+      if(intervalPromise){
+          $interval.cancel(context.intervalPromise);
+      }
+      if(container){
+          container.off('scroll', context.handler);
+      }
+      delete contexts[id];
   };
 
   var defaultContextId = createContext($rootScope);

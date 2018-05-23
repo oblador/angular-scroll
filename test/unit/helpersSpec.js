@@ -22,8 +22,10 @@ describe('jqlite helpers', function() {
       });
     }));
 
-    it('should cancel previous animation', function(done){inject(function($document, $rootScope) {
+    it('should cancel previous animation', function(done){inject(function($document, $rootScope, $window) {
       var rejected = false;
+      $window.scrollY = 400;
+
       $document.scrollTopAnimated(200, duration)
       .catch(function() {
         rejected = true;
