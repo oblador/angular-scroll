@@ -249,7 +249,7 @@ angular.module('myApp', ['duScroll']).value('duScrollBottomSpy', true);
 ```
 
 ### Active class
-Specify the active class name to apply to a link when it is active, default is `active`.
+It Specify the active class name to apply to a link when it is active, default is `active`.
 
 ```js
 angular.module('myApp', ['duScroll']).value('duScrollActiveClass', 'custom-class');
